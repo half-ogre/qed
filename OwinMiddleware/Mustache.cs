@@ -81,25 +81,23 @@ namespace qed
             if (configuration == null)
                 throw new InvalidOperationException("The OwinMustache middleware is not in use.");
 
-            object responseHeaders;
-            if (environment.TryGetValue("owin.ResponseHeaders", out responseHeaders))
-            {
-                var headers = (IDictionary<string, string[]>) responseHeaders;
-                headers["Content-Type"] = new[] {"text/html"};
-            }
+            var responseHeaders = environment.GetResponseHeaders();
+            if (responseHeaders == null)
+                throw new InvalidOperationException("The OWIN environment did not have response headers.");
+            responseHeaders["Content-Type"] = new[] {"text/html"};
 
-            object responseStream;
-            if (!environment.TryGetValue("owin.ResponseBody", out responseStream))
+            var responseBody = environment.GetResponseBody();
+            if (responseBody == null)
                 throw new InvalidOperationException("The OWIN environment did not have a response stream.");
 
             if (HasLayout(configuration) && !templateName.Equals(configuration.LayoutTemplateName))
             {
                 var layout = GetTemplate(configuration, configuration.LayoutTemplateName);
-                return RenderTemplate(configuration, (Stream)responseStream, layout, data, hasLayout: true,  bodyTemplateName: templateName);
+                return RenderTemplate(configuration, responseBody, layout, data, hasLayout: true,  bodyTemplateName: templateName);
             }
 
             var template = GetTemplate(configuration, templateName);
-            return RenderTemplate(configuration, (Stream)responseStream, template, data, hasLayout: false);
+            return RenderTemplate(configuration, responseBody, template, data, hasLayout: false);
         }
 
         static Task RenderTemplate(
