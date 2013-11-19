@@ -32,7 +32,7 @@ namespace qed
             {
                 var eventType = eventTypes.FirstOrDefault();
 
-                if (eventType != null && eventType.Equals("push", StringComparison.OrdinalIgnoreCase))
+                if (eventType == null || !eventType.Equals("push", StringComparison.OrdinalIgnoreCase))
                 {
                     await fail(422, String.Concat("Unexpected X-GitHub-Event: ", eventType, "."));
                     return;
