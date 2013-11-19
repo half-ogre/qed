@@ -2,6 +2,10 @@
 
 _A minimal build daemon and web-based build manager for repositories hosted on GitHub._
 
+:warning: 
+_qed_ is just getting started and is only barely useful. It's still needs lots of features and is certainly full of bugs. 
+:warning:
+
 _qed_ accepts [post-receive hooks](https://help.github.com/articles/post-receive-hooks) from a GitHub repository and then clones and builds that repository. When finished, it uses the GitHub API to update the commit status.
 
 ## Server Installation
