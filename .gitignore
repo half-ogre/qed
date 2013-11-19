@@ -129,8 +129,7 @@ publish/
 *.pubxml
 
 # NuGet Packages Directory
-## TODO: If you have NuGet Package Restore enabled, uncomment the next line
-#packages/
+packages/
 
 # Windows Azure Build Output
 csx
@@ -213,3 +212,6 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
+
+build.config
+NuGet.exe
