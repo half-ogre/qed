@@ -110,6 +110,7 @@
     <Compile Include="Functions\GetConfiguration.cs" />
     <Compile Include="Functions\SetGitHubBuildStatus.cs" />
     <Compile Include="Functions\SetConfiguration.cs" />
+    <Compile Include="OwinExtensions\GetResponseHeaders.cs" />
     <Compile Include="RavenCommands\AppendBuidOutput.cs" />
     <Compile Include="RavenCommands\SetBuildFinished.cs" />
     <Compile Include="RavenCommands\SetBuildStarted.cs" />
