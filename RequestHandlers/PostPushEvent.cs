@@ -19,7 +19,7 @@ namespace qed
                 await environment.WriteAsync(message);
             });
 
-            var headers = environment.GetHeaders();
+            var headers = environment.GetRequestHeaders();
 
             if (!headers.ContainsKey("X-GitHub-Event"))
             {
