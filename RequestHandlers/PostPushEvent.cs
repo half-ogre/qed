@@ -53,6 +53,14 @@ namespace qed
 
             var pushEvent = JsonConvert.DeserializeObject<PushEvent>(@event);
 
+            // When a branch is deleted, GitHub sends a push event where after is 0000000. 
+            // There's no need to do anything in this case.
+            if (pushEvent.After.StartsWith("0000000"))
+            {
+                environment.SetStatusCode(204);
+                return;
+            }
+
             var buildConfigurations = fn.GetBuildConfigurations();
 
             var buildConfiguration = buildConfigurations.FirstOrDefault(bc =>
