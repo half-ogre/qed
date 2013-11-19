@@ -81,6 +81,13 @@ namespace qed
             if (configuration == null)
                 throw new InvalidOperationException("The OwinMustache middleware is not in use.");
 
+            object responseHeaders;
+            if (environment.TryGetValue("owin.ResponseHeaders", out responseHeaders))
+            {
+                var headers = (IDictionary<string, string[]>) responseHeaders;
+                headers["Content-Type"] = new[] {"text/html"};
+            }
+
             object responseStream;
             if (!environment.TryGetValue("owin.ResponseBody", out responseStream))
                 throw new InvalidOperationException("The OWIN environment did not have a response stream.");
