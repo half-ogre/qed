@@ -4,6 +4,8 @@
     {
         public static void ConfigureBuilder(OwinBuilder builder)
         {
+            builder.Use(ContentType.Create());
+
             builder.Use(Mustache.Create(
                 templateRootDirectoryName: "MustacheTemplates",
                 layoutTemplateName: "_layout"));

@@ -5,7 +5,7 @@ namespace qed
 {
     public static partial class Functions
     {
-        public static Stream GetBody(this IDictionary<string, object> environment)
+        public static Stream GetResponseBody(this IDictionary<string, object> environment)
         {
             return environment.Get<Stream>(Constants.Owin.ResponseBodyKey);
         }

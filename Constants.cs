@@ -17,6 +17,7 @@
             public const string RequestMethodKey = "owin.RequestMethod";
             public const string RequestPathKey = "owin.RequestPath";
             public const string ResponseBodyKey = "owin.ResponseBody";
+            public const string ResponseHeadersKey = "owin.ResponseHeaders";
             public const string ResponseStatusCodeKey = "owin.ResponseStatusCode";
         }
 
