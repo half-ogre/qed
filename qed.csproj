@@ -124,7 +124,7 @@
     <Compile Include="OwinExtensions\GetPath.cs" />
     <Compile Include="OwinExtensions\GetMethod.cs" />
     <Compile Include="OwinExtensions\ReadFormAsync.cs" />
-    <Compile Include="OwinExtensions\GetBody.cs" />
+    <Compile Include="OwinExtensions\GetResponseBody.cs" />
     <Compile Include="OwinExtensions\GetRequestHeaders.cs" />
     <Compile Include="OwinExtensions\GetCallCancelled.cs" />
     <Compile Include="OwinExtensions\Get.cs" />

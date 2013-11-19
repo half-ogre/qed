@@ -61,7 +61,7 @@ namespace qed
                 return tcs.Task;
             }
 
-            var body = environment.GetBody();
+            var body = environment.GetResponseBody();
 
             if (body == null)
                 throw new InvalidOperationException("The OWIN response body stream is missing from the environment.");

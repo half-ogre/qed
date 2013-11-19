@@ -64,7 +64,7 @@ namespace qed
                 return form;
 
             string formText;
-            using (var streamReader = new StreamReader(environment.GetBody()))
+            using (var streamReader = new StreamReader(environment.GetResponseBody()))
                 formText = await streamReader.ReadToEndAsync();
 
             form = ParseForm(formText);
