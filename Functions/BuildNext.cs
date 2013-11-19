@@ -44,7 +44,7 @@ namespace qed
                     return;
                 }
 
-                if (!RunStep(build, ResetRepository(build, repositoryDirectory, log)))
+                if (!RunStep(build, CleanRepository(repositoryDirectory, log)))
                 {
                     return;
                 }
@@ -53,8 +53,8 @@ namespace qed
                 {
                     return;
                 }
-
-                if (!RunStep(build, CleanRepository(repositoryDirectory, log)))
+                
+                if (!RunStep(build, ResetRepository(build, repositoryDirectory, log)))
                 {
                     return;
                 }
