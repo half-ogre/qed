@@ -43,3 +43,23 @@ _qed_ requires a JSON file named `build_config.json` in its working directory. T
 ## GitHub Repository Configuration
 
 Add a [post-receive hook](https://help.github.com/articles/post-receive-hooks) with the event type `push` (the default) and a URL of `http://your-host/events/push`.
+
+## Testing Post-Receive Hooks
+
+If you are adding a new feature or fixing a _qed_ bug, you might need to fake a post-receive hook to start a build locally. Here's a PowerShell snippet to fake a push event:
+
+```
+$payload = 'payload='+[System.Uri]::EscapeDataString('{
+  "ref": "refs/heads/{branch}",
+  "after": "{sha}",
+  "repository": {
+    "name": "{name}",
+    "url": "https://github.com/{owner}/{name}",
+    "owner": {
+      "name": "{owner}"
+    }
+  }
+}')
+
+Invoke-WebRequest -Headers @{"X-GitHub-Event"="push"} -Method Post -Body $payload http://localhost:1754/events/push
+```
