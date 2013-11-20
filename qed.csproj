@@ -89,8 +89,15 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit.abstractions">
+      <HintPath>packages\xunit.abstractions.2.0.0-alpha-build2533\lib\net35\xunit.abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit2">
+      <HintPath>packages\xunit.2.0.0-alpha-build2533\lib\net45\xunit2.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\CreateFetchRefspec.cs" />
     <Compile Include="Functions\Redact.cs" />
     <Compile Include="Functions\CleanRepositoy.cs" />
     <Compile Include="Functions\CreateProcess.cs" />
@@ -148,6 +155,7 @@
     <Compile Include="RequestHandlers\GetHome.cs" />
     <Compile Include="RequestHandlers\PostPushEvent.cs" />
     <Compile Include="RequestModels\Repository.cs" />
+    <Compile Include="UnitTests\Functions\CreateFetchRefspec.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
