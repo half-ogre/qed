@@ -49,7 +49,7 @@ namespace qed
                     return;
                 }
 
-                if (!RunStep(build, FetchRepository(repositoryDirectory, log)))
+                if (!RunStep(build, FetchRepository(build, repositoryDirectory, log)))
                 {
                     return;
                 }
