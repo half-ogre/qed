@@ -1,12 +1,12 @@
-# qed
+# QED CI
 
-_A minimal build daemon and web-based build manager for repositories hosted on GitHub._
+_A minimal continuous integration server for repositories hosted on GitHub._
 
 :warning: 
-_qed_ is just getting started and is only barely useful. It's still needs lots of features and is certainly full of bugs. 
+QED is just getting started and is only barely useful. It's still needs lots of features and is certainly full of bugs. 
 :warning:
 
-_qed_ accepts [post-receive hooks](https://help.github.com/articles/post-receive-hooks) from a GitHub repository and then clones and builds that repository. When finished, it uses the GitHub API to update the commit status.
+QED accepts [post-receive hooks](https://help.github.com/articles/post-receive-hooks) from a GitHub repository and then clones and builds that repository. When finished, it uses the GitHub API to update the commit status.
 
 ## Server Installation
 
@@ -26,7 +26,7 @@ _qed_ accepts [post-receive hooks](https://help.github.com/articles/post-receive
 
 ## Build Configuration
 
-_qed_ requires a JSON file named `build_config.json` in its working directory. The format of this file is:
+QED requires a JSON file named `build_config.json` in its working directory. The format of this file is:
 
 ```
 [
@@ -48,7 +48,7 @@ Add another [post-receive hook](https://help.github.com/articles/post-receive-ho
 
 ## Testing Post-Receive Hooks
 
-If you are adding a new feature or fixing a _qed_ bug, you might need to fake a post-receive hook to start a build locally. Here's a PowerShell snippet to fake a push event:
+If you are adding a new feature or fixing a QED bug, you might need to fake a post-receive hook to start a build locally. Here's a PowerShell snippet to fake a push event:
 
 ```
 $pushPayload = 'payload='+[System.Uri]::EscapeDataString('{
