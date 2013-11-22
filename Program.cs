@@ -39,7 +39,7 @@ namespace qed
                 try
                 {
                     // TODO: Do this with cancellation and timeout
-                    fn.BuildNext()
+                    fn.BuildNext(Console.WriteLine)
                         .Wait();
                 }
                 catch (AggregateException agEx)
