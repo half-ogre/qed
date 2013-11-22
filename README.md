@@ -17,16 +17,16 @@ QED accepts [post-receive hooks](https://help.github.com/articles/post-receive-h
 
 **Steps**
 
-1. Download the latest release .zip file. 
-1. Extract the archive.
-1. [Create a build configuration](#build-configuration) in the extracted directory.
+1. Clone the source code.
+1. Run `msbuild.exe` in the repository's root directory.
+1. [Create a build configuration](#build-configuration) in the repository's root directory.
 1. [Configure the GitHub repository](#github-repository-configuration).
 1. Run `qed.exe`.
 1. Open a browser to `http://localhost:1754`.
 
 ## Build Configuration
 
-QED requires a JSON file named `build_config.json` in its working directory. The format of this file is:
+QED requires a JSON file named `build.config` in its working directory. The format of this file is:
 
 ```
 [
