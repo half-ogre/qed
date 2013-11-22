@@ -44,45 +44,15 @@ namespace qed
 
             try
             {
-                succeeded = await SetGitHubBuildStarted(
-                    build,
-                    logBuildMessage);
+                succeeded = 
+                    await SetGitHubBuildStarted(build, logBuildMessage) &&
+                    await CloneRepository(buildConfiguration, build, repositoryOwnerDirectory, repositoryDirectory, logBuildMessage) &&
+                    await CleanRepository(repositoryDirectory, logBuildMessage) &&
+                    await FetchRepository(build, repositoryDirectory, logBuildMessage) &&
+                    await ResetRepository(build, repositoryDirectory, logBuildMessage) &&
+                    await RunBuild(build, repositoryDirectory, logBuildMessage);
 
-                if (succeeded)
-                    succeeded = await CloneRepository(
-                        buildConfiguration,
-                        build,
-                        repositoryOwnerDirectory,
-                        repositoryDirectory,
-                        logBuildMessage);
-
-                if (succeeded)
-                    succeeded = await CleanRepository(
-                        repositoryDirectory,
-                        logBuildMessage);
-
-                if (succeeded)
-                    succeeded = await FetchRepository(
-                        build,
-                        repositoryDirectory,
-                        logBuildMessage);
-
-                if (succeeded)
-                    succeeded = await ResetRepository(
-                        build,
-                        repositoryDirectory,
-                        logBuildMessage);
-
-                if (succeeded)
-                    succeeded = await RunBuild(
-                        build,
-                        repositoryDirectory,
-                        logBuildMessage);
-
-                await SetGitHubBuildFinished(
-                    build,
-                    succeeded,
-                    logBuildMessage);
+                await SetGitHubBuildFinished(build, succeeded, logBuildMessage);
             }
             catch (Exception ex)
             {
