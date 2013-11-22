@@ -38,8 +38,9 @@ namespace qed
             {
                 try
                 {
-                    // TODO: Do this with a timeout
-                    fn.BuildNext();
+                    // TODO: Do this with cancellation and timeout
+                    fn.BuildNext()
+                        .Wait();
                 }
                 catch (AggregateException agEx)
                 {

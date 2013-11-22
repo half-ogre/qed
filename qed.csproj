@@ -97,6 +97,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\RunStep.cs" />
     <Compile Include="Functions\CreateFetchRefspec.cs" />
     <Compile Include="Functions\Redact.cs" />
     <Compile Include="Functions\CleanRepositoy.cs" />

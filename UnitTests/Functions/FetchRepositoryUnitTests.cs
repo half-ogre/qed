@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Xunit;
 using fn = qed.Functions;
 
@@ -67,11 +68,27 @@ namespace qed.UnitTests
         }
 
         [Fact]
-        public void returns_the_exit_code_from_running_the_process()
+        public async Task returns_true_when_the_exit_code_from_running_the_process_is_zero()
+        {
+            _fakeRunProcess = (process, log) => 0;
+
+            var actual = await fn.FetchRepository(
+                _fakeBuild,
+                "a-repository-directory",
+                _fakeLog,
+                _fakeCreateProcess,
+                _fakeCreateFetchRefspec,
+                _fakeRunProcess);
+
+            Assert.True(actual);
+        }
+
+        [Fact]
+        public async Task returns_false_when_the_exit_code_from_running_the_process_is_not_zero()
         {
             _fakeRunProcess = (process, log) => 42;
 
-            var actual = fn.FetchRepository(
+            var actual = await fn.FetchRepository(
                 _fakeBuild, 
                 "a-repository-directory", 
                 _fakeLog, 
@@ -79,7 +96,7 @@ namespace qed.UnitTests
                 _fakeCreateFetchRefspec, 
                 _fakeRunProcess);
 
-            Assert.Equal(42, actual);
+            Assert.False(actual);
         }
 
         [Fact]

@@ -1,11 +1,11 @@
 ﻿using System;
-using Raven.Client;
+using System.Threading.Tasks;
 
 namespace qed
 {
     public static partial class Functions
     {
-        public static void BuildNext()
+        public static async Task BuildNext()
         {
             var build = GetNextPendingBuild();
 
@@ -38,33 +38,38 @@ namespace qed
             var repositoryDirectory = GetRepositoryDirectory(build);
 
             try
-            { 
-                if (!RunStep(build, CloneRepository(buildConfiguration, build, repositoryOwnerDirectory, repositoryDirectory, log)))
-                {
-                    return;
-                }
+            {
+                var succeeded = await CloneRepository(
+                    buildConfiguration,
+                    build,
+                    repositoryOwnerDirectory,
+                    repositoryDirectory,
+                    log);
 
-                if (!RunStep(build, CleanRepository(repositoryDirectory, log)))
-                {
-                    return;
-                }
+                if (succeeded)
+                    succeeded = await CleanRepository(
+                        repositoryDirectory,
+                        log);
 
-                if (!RunStep(build, FetchRepository(build, repositoryDirectory, log)))
-                {
-                    return;
-                }
-                
-                if (!RunStep(build, ResetRepository(build, repositoryDirectory, log)))
-                {
-                    return;
-                }
+                if (succeeded)
+                    succeeded = await FetchRepository(
+                        build,
+                        repositoryDirectory,
+                        log);
 
-                if (!RunStep(build, RunBuild(build, repositoryDirectory, log)))
-                {
-                    return;
-                }
+                if (succeeded)
+                    succeeded = await ResetRepository(
+                        build,
+                        repositoryDirectory,
+                        log);
 
-                SetBuildFinished(build, true, DateTimeOffset.UtcNow);
+                if (succeeded)
+                    succeeded = await RunBuild(
+                        build,
+                        repositoryDirectory,
+                        log);
+
+                SetBuildFinished(build, succeeded, DateTimeOffset.UtcNow);
             }
             catch(Exception ex)
             {
@@ -73,19 +78,6 @@ namespace qed
                 log(""); // this line intentionally left blank
                 SetBuildFinished(build, false, DateTimeOffset.UtcNow);
             }
-        }
-
-        static bool RunStep(
-            Build build,
-            int exitCode)
-        {
-            if (exitCode > 0)
-            {
-                SetBuildFinished(build, false, DateTimeOffset.UtcNow);
-                return false;
-            }
-
-            return true;
         }
     }
 }

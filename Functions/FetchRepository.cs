@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace qed
 {
     public static partial class Functions
     {
-        public static int FetchRepository(
+        public static Task<bool> FetchRepository(
             Build build,
             string repositoryDirectory,
             Action<string> log)
@@ -19,7 +20,7 @@ namespace qed
                 RunProcess);
         }
 
-        internal static int FetchRepository(
+        internal static Task<bool> FetchRepository(
             Build build,
             string repositoryDirectory,
             Action<string> log,
@@ -29,21 +30,14 @@ namespace qed
         {
             log("STEP: Fetching repository.");
 
-            var process = createProcess(
-                "git.exe", 
-                String.Concat("fetch origin ", createFetchRefspec(build.Ref)), 
-                repositoryDirectory);
+            return RunStep(() =>
+            {
+                var process = createProcess(
+                    "git.exe",
+                    String.Concat("fetch origin ", createFetchRefspec(build.Ref)), repositoryDirectory);
 
-            var exitCode = runProcess(process, log);
-
-            if (exitCode > 0)
-                log("FAILED: Fetching repository failed. Examine the output above this message for errors or an explanation.");
-            else
-                log("Finished fetching repository.");
-
-            log(""); // this line intentionally left blank
-
-            return exitCode;
+                return runProcess(process, log) == 0;
+            }, log);
         }
     }
 }
