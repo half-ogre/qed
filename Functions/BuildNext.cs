@@ -37,6 +37,13 @@ namespace qed
             var repositoryOwnerDirectory = GetRepositoryOwnerDirectory(build);
             var repositoryDirectory = GetRepositoryDirectory(build);
 
+            log(String.Format(
+                "STARTED: Building {0} at revision {1} (#{2}).",
+                GetRefDescription(build),
+                build.Revision,
+                build.Id));
+            log(""); // this line intentionally left blank
+
             try
             {
                 var succeeded = await CloneRepository(
