@@ -1,11 +1,12 @@
 ﻿using System;
 using System.IO;
+using System.Threading.Tasks;
 
 namespace qed
 {
     public static partial class Functions
     {
-        public static int CloneRepository(
+        public static Task<bool> CloneRepository(
             BuildConfiguration buildConfiguration,
             Build build,
             string repositoryOwnerDirectory,
@@ -14,15 +15,16 @@ namespace qed
         {
             log("STEP: Cloning repository.");
 
-            log("Checking whether repository has already been cloned.");
+            return RunStep(() =>
+            {
+                log("Checking whether repository has already been cloned.");
 
-            var exitCode = 0;
-            if (Directory.Exists(repositoryDirectory))
-            {
-                log(String.Format("{0} already exists. Skipping clone.", repositoryDirectory));
-            }
-            else
-            {
+                if (Directory.Exists(repositoryDirectory))
+                {
+                    log(String.Format("{0} already exists. Skipping clone.", repositoryDirectory));
+                    return true;
+                }
+
                 var uriBuilder = new UriBuilder(build.RepositoryUrl)
                 {
                     UserName = buildConfiguration.Token,
@@ -36,17 +38,8 @@ namespace qed
                     arguments: String.Format("clone --recursive {0} {1}", url, repositoryDirectory),
                     workingDirectory: repositoryOwnerDirectory);
 
-                exitCode = RunProcess(process, log);
-            }
-
-            if (exitCode > 0)
-                log("FAILED: Cloning repository failed. Examine the output above this message for errors or an explanation.");
-            else
-                log("Finished cloning repository.");
-
-            log(""); // this line intentionally left blank
-
-            return exitCode;
+                return RunProcess(process, log) == 0;
+            }, log);
         }
     }
 }

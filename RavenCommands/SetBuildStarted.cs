@@ -1,11 +1,10 @@
 ﻿using System;
-using Octokit;
 
 namespace qed
 {
     public static partial class Functions
     {
-        public static async void SetBuildStarted(
+        public static void SetBuildStarted(
             Build build,
             DateTimeOffset started)
         {
@@ -15,8 +14,6 @@ namespace qed
 
                 ravenSession.Store(build);
                 ravenSession.SaveChanges();
-
-                await SetGitHubBuildStatus(build, CommitState.Pending);
             }
         }
     }

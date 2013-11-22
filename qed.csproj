@@ -89,8 +89,18 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="xunit.abstractions">
+      <HintPath>packages\xunit.abstractions.2.0.0-alpha-build2533\lib\net35\xunit.abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit2">
+      <HintPath>packages\xunit.2.0.0-alpha-build2533\lib\net45\xunit2.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\SetGitHubBuildStarted.cs" />
+    <Compile Include="Functions\RunStep.cs" />
+    <Compile Include="Functions\GetRefDescription.cs" />
+    <Compile Include="Functions\CreateFetchRefspec.cs" />
     <Compile Include="Functions\Redact.cs" />
     <Compile Include="Functions\CleanRepositoy.cs" />
     <Compile Include="Functions\CreateProcess.cs" />
@@ -108,6 +118,7 @@
     <Compile Include="Functions\RunBuild.cs" />
     <Compile Include="Functions\RunProcess.cs" />
     <Compile Include="Functions\GetConfiguration.cs" />
+    <Compile Include="Functions\SetGitHubBuildFinished.cs" />
     <Compile Include="Functions\SetGitHubBuildStatus.cs" />
     <Compile Include="Functions\SetConfiguration.cs" />
     <Compile Include="OwinExtensions\GetResponseHeaders.cs" />
@@ -137,8 +148,12 @@
     <Compile Include="BuildConfiguration.cs" />
     <Compile Include="RavenQueries\GetBuilds.cs" />
     <Compile Include="RavenQueries\GetBuild.cs" />
+    <Compile Include="RequestHandlers\PostPullRequestEvent.cs" />
     <Compile Include="RequestHandlers\GetBuild.cs" />
     <Compile Include="RequestHandlers\GetBuilds.cs" />
+    <Compile Include="RequestModels\Branch.cs" />
+    <Compile Include="RequestModels\PullRequest.cs" />
+    <Compile Include="RequestModels\PullRequestEvent.cs" />
     <Compile Include="RequestModels\Owner.cs" />
     <Compile Include="RequestModels\PushEvent.cs" />
     <Compile Include="Program.cs" />
@@ -148,6 +163,8 @@
     <Compile Include="RequestHandlers\GetHome.cs" />
     <Compile Include="RequestHandlers\PostPushEvent.cs" />
     <Compile Include="RequestModels\Repository.cs" />
+    <Compile Include="UnitTests\Functions\FetchRepositoryUnitTests.cs" />
+    <Compile Include="UnitTests\Functions\CreateFetchRefspec.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

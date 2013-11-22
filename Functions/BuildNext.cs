@@ -1,91 +1,77 @@
 ﻿using System;
-using Raven.Client;
+using System.Threading.Tasks;
 
 namespace qed
 {
     public static partial class Functions
     {
-        public static void BuildNext()
+        public static async Task BuildNext(Action<string> logConsoleMessage)
         {
             var build = GetNextPendingBuild();
 
+            // TODO: log the non-build error somewhere
             if (build == null)
                 return;
-
-            SetBuildStarted(build, DateTimeOffset.UtcNow);
-
-            var log = new Action<string>(message =>
-            {
-                Console.WriteLine(message);
-                AppendBuildOutput(build, message);
-            });
 
             var buildConfiguration = GetBuildConfiguration(
                 build.RepositoryOwner,
                 build.RepositoryName);
-                
+
+            // TODO: log the non-build error somewhere
             if (buildConfiguration == null)
-            {
-                log(String.Format(
-                    "ERROR: The is no build configuration for {0}/{1}.",
-                    build.RepositoryOwner,
-                    build.RepositoryName));
-                SetBuildFinished(build, false, DateTimeOffset.UtcNow);
                 return;
-            }
+
+            var logBuildMessage = new Action<string>(message =>
+            {
+                logConsoleMessage(message);
+                AppendBuildOutput(build, message);
+            });
 
             var repositoryOwnerDirectory = GetRepositoryOwnerDirectory(build);
             var repositoryDirectory = GetRepositoryDirectory(build);
 
+            SetBuildStarted(build, DateTimeOffset.UtcNow);
+
+            logBuildMessage(
+                    String.Format(
+                        "STARTED: Building {0} at revision {1} (#{2}).",
+                        GetRefDescription(build),
+                        build.Revision,
+                        build.Id));
+            logBuildMessage(""); // this line intentionally left blank
+
+            var succeeded = false;
+
             try
-            { 
-                if (!RunStep(build, CloneRepository(buildConfiguration, build, repositoryOwnerDirectory, repositoryDirectory, log)))
-                {
-                    return;
-                }
-
-                if (!RunStep(build, CleanRepository(repositoryDirectory, log)))
-                {
-                    return;
-                }
-
-                if (!RunStep(build, FetchRepository(repositoryDirectory, log)))
-                {
-                    return;
-                }
-                
-                if (!RunStep(build, ResetRepository(build, repositoryDirectory, log)))
-                {
-                    return;
-                }
-
-                if (!RunStep(build, RunBuild(build, repositoryDirectory, log)))
-                {
-                    return;
-                }
-
-                SetBuildFinished(build, true, DateTimeOffset.UtcNow);
-            }
-            catch(Exception ex)
             {
-                log("ERROR: An unexpected error occurred:");
-                log(ex.ToString());
-                log(""); // this line intentionally left blank
-                SetBuildFinished(build, false, DateTimeOffset.UtcNow);
-            }
-        }
+                succeeded = 
+                    await SetGitHubBuildStarted(build, logBuildMessage) &&
+                    await CloneRepository(buildConfiguration, build, repositoryOwnerDirectory, repositoryDirectory, logBuildMessage) &&
+                    await CleanRepository(repositoryDirectory, logBuildMessage) &&
+                    await FetchRepository(build, repositoryDirectory, logBuildMessage) &&
+                    await ResetRepository(build, repositoryDirectory, logBuildMessage) &&
+                    await RunBuild(build, repositoryDirectory, logBuildMessage);
 
-        static bool RunStep(
-            Build build,
-            int exitCode)
-        {
-            if (exitCode > 0)
+                await SetGitHubBuildFinished(build, succeeded, logBuildMessage);
+            }
+            catch (Exception ex)
             {
-                SetBuildFinished(build, false, DateTimeOffset.UtcNow);
-                return false;
+                succeeded = false;
+                logBuildMessage("ERROR: An unexpected error occurred: ");
+                logBuildMessage(ex.ToString());
             }
+            finally
+            {
+                SetBuildFinished(build, succeeded, DateTimeOffset.UtcNow);
 
-            return true;
+                logBuildMessage(
+                    String.Format(
+                        "FINISHED: Building {0} at revision {1} in {2} seconds.",
+                        GetRefDescription(build),
+                        build.Revision,
+                        (build.Finished.GetValueOrDefault() - build.Started.GetValueOrDefault()).TotalSeconds));
+                logBuildMessage(""); // this line intentionally left blank
+            }
         }
     }
 }
