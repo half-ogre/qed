@@ -21,7 +21,7 @@ QED accepts [post-receive hooks](https://help.github.com/articles/post-receive-h
 1. Run `msbuild.exe` in the repository's root directory.
 1. [Create a build configuration](#build-configuration) in the repository's root directory.
 1. [Configure the GitHub repository](#github-repository-configuration).
-1. Run `qed.exe`.
+1. Run `./bin/Debug/qed.exe` from the repository's root directory.
 1. Open a browser to `http://localhost:1754`.
 
 ## Build Configuration
