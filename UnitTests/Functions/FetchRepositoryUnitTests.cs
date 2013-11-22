@@ -100,7 +100,7 @@ namespace qed.UnitTests
         }
 
         [Fact]
-        public void logs_a_success_message_when_exit_code_is_zero()
+        public void logs_a_done_message_when_exit_code_is_zero()
         {
             var actualLog = new List<string>();
             _fakeLog = actualLog.Add;
@@ -113,11 +113,11 @@ namespace qed.UnitTests
                 _fakeCreateFetchRefspec,
                 _fakeRunProcess);
 
-            Assert.Equal("Finished fetching repository.", actualLog[1]);
+            Assert.Equal("Done", actualLog[1]);
         }
 
         [Fact]
-        public void logs_an_error_message_when_exit_code_is_not_zero()
+        public void logs_a_done_message_when_exit_code_is_not_zero()
         {
             var actualLog = new List<string>();
             _fakeLog = actualLog.Add;
@@ -131,7 +131,7 @@ namespace qed.UnitTests
                 _fakeCreateFetchRefspec,
                 _fakeRunProcess);
 
-            Assert.Equal("FAILED: Fetching repository failed. Examine the output above this message for errors or an explanation.", actualLog[1]);
+            Assert.Equal("Done", actualLog[1]);
         }
 
         [Fact]
