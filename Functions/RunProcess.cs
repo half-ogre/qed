@@ -9,20 +9,6 @@ namespace qed
             Process process, 
             Action<string> log)
         {
-            process.EnableRaisingEvents = true;
-
-            process.OutputDataReceived += (sender, args) =>
-            {
-                if (args.Data == null) return;
-                log(args.Data);
-            };
-
-            process.ErrorDataReceived += (sender, args) =>
-            {
-                if (args.Data == null) return;
-                log(args.Data);
-            };
-
             log(String.Format(
                 "Running {0} {1} in {2}", 
                 process.StartInfo.FileName,
@@ -33,12 +19,22 @@ namespace qed
             // TODO: use a timeout
             process.Start();
 
-            process.BeginOutputReadLine();
-            process.BeginErrorReadLine();
+            var output = process.StandardOutput
+                .ReadToEnd()
+                .TrimEnd();
+
+            var errors = process.StandardError
+                .ReadToEnd()
+                .TrimEnd();
 
             process.WaitForExit();
             var exitCode = process.ExitCode;
             process.Dispose();
+
+            if (exitCode == 0 && !String.IsNullOrEmpty(output))
+                log(output);
+            else if (!String.IsNullOrEmpty(errors))
+                log(errors);
 
             return exitCode;
         }
