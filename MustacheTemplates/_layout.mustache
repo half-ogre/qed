@@ -1,14 +1,42 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-  <title>qed</title>
+  <title>QED CI</title>
   <style>
-    .build-failed a { color: red; }
+    html {
+      margin: 0;
+	}
+
+	body { 
+	  font-family: 'Lucida Grande', 'Calibri', Helvetica, Arial, sans-serif;
+	  margin: 0px;
+	}
+
+	header {
+	  background-color: black;
+	  color: white;
+	  display: block;
+	  padding: 10px;
+	}
+
+	header p {
+	  font-size: 24px;
+	}
+
+	section.main {
+	  padding: 10px;
+	}
+    
+	.build-failed a { color: red; }
     .build-succeeded a { color: green; }
   </style>
 </head>
 <body>
-  <h1>qed</h1>
-  {{>body}}
+  <header>
+    <p>QED CI</p>
+  </header>
+  <section class="main">
+    {{>body}}
+  </section>
 </body>
 </html>
