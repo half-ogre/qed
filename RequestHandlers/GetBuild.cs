@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using fn = qed.Functions;
 
@@ -31,6 +30,7 @@ namespace qed
                 id = build.Id,
                 name = build.RepositoryName,
                 owner = build.RepositoryOwner,
+                failed = !build.Succeeded,
                 output = fn.Redact(build.Ouput)
             });
         }

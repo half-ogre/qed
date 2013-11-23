@@ -178,6 +178,9 @@
     <Content Include="MustacheTemplates\build.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="MustacheTemplates\rebuild.mustache">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <Content Include="MustacheTemplates\home.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
