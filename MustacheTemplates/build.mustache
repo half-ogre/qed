@@ -2,7 +2,7 @@
   {{#failed}}
   <form action="/events/rebuild" method="POST">
     <input name="build_id" type="hidden" value="{{id}}" />
-    <button type="submit">Retry</button>
+    <button type="submit">Retry {{sha}}</button>
   </form>
   {{/failed}}
   <pre>{{output}}</pre>

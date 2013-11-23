@@ -30,6 +30,7 @@ namespace qed
                 id = build.Id,
                 name = build.RepositoryName,
                 owner = build.RepositoryOwner,
+                sha = build.Revision.Substring(0, 7),
                 failed = !build.Succeeded,
                 output = fn.Redact(build.Ouput)
             });
