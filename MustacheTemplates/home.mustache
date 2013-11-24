@@ -1,8 +1,11 @@
-﻿  <h2>Build Configurations</h2>
+﻿  <h1>Configured GitHub Repositories</h1>
   <ul>
-  {{#buildConfigurations}}
-	  <li>
-	    <a href="/{{owner}}/{{name}}">{{owner}}/{{name}}</a>
-	  </li>
-  {{/buildConfigurations}}
+    {{#configuredRepos}}
+    <li>
+      <a href="/{{owner}}/{{name}}"><h2 class="repository">{{owner}}/{{name}}</h2></a>
+      {{#lastBuild}}
+      <p class="build-description">Last: <a href="/{{owner}}/{{name}}/builds/{{id}}" class="build-{{status}}">{{description}}</a></p>
+      {{/lastBuild}}
+    </li>
+    {{/configuredRepos}}
   </ul>
