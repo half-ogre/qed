@@ -1,4 +1,4 @@
-﻿  <h2>Build {{id}} for {{owner}}/{{name}}</h2>
+﻿  <h1><a href="/">Home</a> &raquo; <a href="/{{owner}}/{{name}}">{{owner}}/{{name}}</a> &raquo; Build #{{id}}</h1>
   {{#failed}}
   <form action="/events/rebuild" method="POST">
     <input name="build_id" type="hidden" value="{{id}}" />
