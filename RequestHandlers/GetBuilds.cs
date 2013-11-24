@@ -24,10 +24,10 @@ namespace qed
             }
 
             var builds = fn.GetBuilds(buildConfiguration.Owner, buildConfiguration.Name)
+                .Reverse()
                 .Select(build => new {
                     id = build.Id,
-                    @ref = build.Ref,
-                    revision = build.Revision,
+                    description = fn.GetBuildDescription(build, true),
                     status = GetBuildStatus(build)
                 });
             

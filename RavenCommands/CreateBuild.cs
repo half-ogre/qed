@@ -1,4 +1,6 @@
-﻿namespace qed
+﻿using System;
+
+namespace qed
 {
     public static partial class Functions
     {
@@ -19,6 +21,7 @@
             {
                 var build = new Build
                 {
+                    Queued = DateTimeOffset.UtcNow,
                     Command = command,
                     CommandArguments = commandArguments,
                     RepositoryName = repositoryName,

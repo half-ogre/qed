@@ -7,7 +7,7 @@ namespace qed
     {
         public static async Task BuildNext(Action<string> logConsoleMessage)
         {
-            var build = GetNextPendingBuild();
+            var build = GetNextQueuedBuild();
 
             // TODO: log the non-build error somewhere
             if (build == null)

@@ -14,7 +14,7 @@ namespace qed
         {
             var owner = @params.owner as string;
             var name = @params.name as string;
-            var id = new Guid(@params.id as string);
+            var id = int.Parse(@params.id as string);
 
             var buildConfiguration = fn.GetBuildConfiguration(owner, name);
             if (buildConfiguration == null)
@@ -28,11 +28,13 @@ namespace qed
             await environment.Render("build", new
             {
                 id = build.Id,
+                description = fn.GetBuildDescription(build, includeRefDescription: true),
                 name = build.RepositoryName,
                 owner = build.RepositoryOwner,
                 sha = build.Revision.Substring(0, 7),
                 failed = !build.Succeeded,
-                output = fn.Redact(build.Ouput)
+                output = fn.Redact(build.Ouput),
+                status = GetBuildStatus(build)
             });
         }
     }

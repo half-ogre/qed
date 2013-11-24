@@ -1,10 +1,8 @@
-﻿using System;
-
-namespace qed
+﻿namespace qed
 {
     public static partial class Functions
     {
-        public static Build GetBuild(Guid id)
+        public static Build GetBuild(int id)
         {
             using (var ravenSession = OpenRavenSession())
             {

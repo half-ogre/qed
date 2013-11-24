@@ -4,7 +4,7 @@ namespace qed
 {
     public static partial class Functions
     {
-        public static Build GetNextPendingBuild()
+        public static Build GetNextQueuedBuild()
         {
             using (var ravenSession = OpenRavenSession())
             {

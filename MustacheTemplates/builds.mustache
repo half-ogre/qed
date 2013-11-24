@@ -1,8 +1,8 @@
-﻿  <h2>Builds for {{owner}}/{{name}}</h2>
+﻿  <h1><a href="/">Home</a> &raquo; {{owner}}/{{name}}</h1>
   <ul>
-  {{#builds}}
-	  <li class="build-{{status}}">
-      <a href="/{{owner}}/{{name}}/builds/{{id}}">{{ref}}@{{revision}}</a>
+    {{#builds}}
+	  <li>
+      <a href="/{{owner}}/{{name}}/builds/{{id}}" class="build-{{status}}">{{description}}</a>
     </li>
-  {{/builds}}
+    {{/builds}}
   </ul>

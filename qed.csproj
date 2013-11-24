@@ -97,6 +97,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\To.cs" />
+    <Compile Include="Functions\Until.cs" />
+    <Compile Include="Functions\Since.cs" />
+    <Compile Include="Functions\GetBuildDescription.cs" />
     <Compile Include="Functions\SetGitHubBuildStarted.cs" />
     <Compile Include="Functions\RunStep.cs" />
     <Compile Include="Functions\GetRefDescription.cs" />
@@ -146,6 +150,9 @@
     <Compile Include="OwinMiddleware\Mustache.cs" />
     <Compile Include="RavenDocuments\Build.cs" />
     <Compile Include="BuildConfiguration.cs" />
+    <Compile Include="RavenQueries\GetNextBuild.cs" />
+    <Compile Include="RavenQueries\GetCurrentBuild.cs" />
+    <Compile Include="RavenQueries\GetLastFinishedBuild.cs" />
     <Compile Include="RavenQueries\GetBuilds.cs" />
     <Compile Include="RavenQueries\GetBuild.cs" />
     <Compile Include="RequestHandlers\PostRebuildEvent.cs" />
@@ -159,13 +166,17 @@
     <Compile Include="RequestModels\PushEvent.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RavenQueries\GetNextPendingBuild.cs" />
+    <Compile Include="RavenQueries\GetNextQueuedBuild.cs" />
     <Compile Include="Functions\GetBuildConfigurations.cs" />
     <Compile Include="RequestHandlers\GetHome.cs" />
     <Compile Include="RequestHandlers\PostPushEvent.cs" />
     <Compile Include="RequestModels\Repository.cs" />
+    <Compile Include="UnitTests\Functions\UntilUnitTests.cs" />
+    <Compile Include="UnitTests\Functions\SinceUnitTests.cs" />
+    <Compile Include="UnitTests\Functions\ToUnitTests.cs" />
+    <Compile Include="UnitTests\Functions\GetBuildDescriptionUnitTests.cs" />
     <Compile Include="UnitTests\Functions\FetchRepositoryUnitTests.cs" />
-    <Compile Include="UnitTests\Functions\CreateFetchRefspec.cs" />
+    <Compile Include="UnitTests\Functions\CreateFetchRefspecUnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
