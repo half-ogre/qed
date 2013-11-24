@@ -150,6 +150,7 @@
     <Compile Include="OwinMiddleware\Mustache.cs" />
     <Compile Include="RavenDocuments\Build.cs" />
     <Compile Include="BuildConfiguration.cs" />
+    <Compile Include="RavenQueries\GetLastFinishedBuild.cs" />
     <Compile Include="RavenQueries\GetBuilds.cs" />
     <Compile Include="RavenQueries\GetBuild.cs" />
     <Compile Include="RequestHandlers\PostRebuildEvent.cs" />
