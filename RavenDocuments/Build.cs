@@ -9,7 +9,7 @@ namespace qed
         public string Event { get; set; }
         public string EventType { get; set; }
         public DateTimeOffset? Finished { get; set; }
-        public Guid Id { get; set; }
+        public int Id { get; set; }
         public string Ouput { get; set; }
         public DateTimeOffset? Queued { get; set; }
         public string Ref { get; set; }

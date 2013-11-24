@@ -14,7 +14,7 @@ namespace qed
         {
             var owner = @params.owner as string;
             var name = @params.name as string;
-            var id = new Guid(@params.id as string);
+            var id = int.Parse(@params.id as string);
 
             var buildConfiguration = fn.GetBuildConfiguration(owner, name);
             if (buildConfiguration == null)

@@ -13,7 +13,7 @@ namespace qed.UnitTests
             var build = new Build
             {
                 Finished = null,
-                Id = new Guid(),
+                Id = 42,
                 Queued = null,
                 Started = null,
                 Succeeded = null
@@ -31,7 +31,7 @@ namespace qed.UnitTests
             var build = new Build
             {
                 Finished = null,
-                Id = new Guid(),
+                Id = 42,
                 Queued = queued,
                 Started = null,
                 Succeeded = null
@@ -49,7 +49,7 @@ namespace qed.UnitTests
             var build = new Build
             {
                 Finished = null,
-                Id = new Guid(),
+                Id = 42,
                 Queued = DateTimeOffset.UtcNow,
                 Started = now.AddSeconds(-42),
                 Succeeded = null
@@ -67,7 +67,7 @@ namespace qed.UnitTests
             var build = new Build
             {
                 Finished = now.AddSeconds(-60),
-                Id = new Guid(),
+                Id = 42,
                 Queued = DateTimeOffset.UtcNow,
                 Started = now.AddSeconds(-102),
                 Succeeded = null
@@ -85,7 +85,7 @@ namespace qed.UnitTests
             var build = new Build
             {
                 Finished = now.AddSeconds(-60),
-                Id = new Guid(),
+                Id = 42,
                 Queued = DateTimeOffset.UtcNow,
                 Started = now.AddSeconds(-102),
                 Succeeded = true
@@ -103,7 +103,7 @@ namespace qed.UnitTests
             var build = new Build
             {
                 Finished = now.AddSeconds(-60),
-                Id = new Guid(),
+                Id = 42,
                 Queued = DateTimeOffset.UtcNow,
                 Started = now.AddSeconds(-102),
                 Succeeded = false

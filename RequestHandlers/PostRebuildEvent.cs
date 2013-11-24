@@ -27,8 +27,8 @@ namespace qed
                 return;
             }
 
-            Guid buildId;
-            if (!Guid.TryParse(buildIdField[0], out buildId))
+            int buildId;
+            if (!int.TryParse(buildIdField[0], out buildId))
             {
                 await fail(422, "Build identifier is not a valid GUID.");
                 return;
