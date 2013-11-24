@@ -97,6 +97,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\To.cs" />
     <Compile Include="Functions\SetGitHubBuildStarted.cs" />
     <Compile Include="Functions\RunStep.cs" />
     <Compile Include="Functions\GetRefDescription.cs" />
@@ -164,6 +165,7 @@
     <Compile Include="RequestHandlers\GetHome.cs" />
     <Compile Include="RequestHandlers\PostPushEvent.cs" />
     <Compile Include="RequestModels\Repository.cs" />
+    <Compile Include="UnitTests\Functions\ToUnitTests.cs" />
     <Compile Include="UnitTests\Functions\FetchRepositoryUnitTests.cs" />
     <Compile Include="UnitTests\Functions\CreateFetchRefspec.cs" />
   </ItemGroup>
