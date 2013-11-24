@@ -14,7 +14,7 @@ namespace qed
                     .Where(build => build.RepositoryOwner == repositoryOwner &&
                                     build.RepositoryName == repositoryName && 
                                     build.Finished != null)
-                    .OrderByDescending(build => build.Started)
+                    .OrderByDescending(build => build.Finished)
                     .FirstOrDefault();
             }
         }
