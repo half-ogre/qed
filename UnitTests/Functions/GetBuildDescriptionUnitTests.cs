@@ -55,7 +55,7 @@ namespace qed.UnitTests
                 Succeeded = null
             };
 
-            var actual = fn.GetBuildDescription(build, now);
+            var actual = fn.GetBuildDescription(build, false, now);
 
             Assert.Equal(String.Format("Build #{0} started {1} seconds ago.", build.Id, 42), actual);
         }
@@ -73,7 +73,7 @@ namespace qed.UnitTests
                 Succeeded = null
             };
 
-            var actual = fn.GetBuildDescription(build, now);
+            var actual = fn.GetBuildDescription(build, false, now);
 
             Assert.Equal(String.Format("Build #{0} finished in {1} seconds.", build.Id, 42), actual);
         }
@@ -91,7 +91,7 @@ namespace qed.UnitTests
                 Succeeded = true
             };
 
-            var actual = fn.GetBuildDescription(build, now);
+            var actual = fn.GetBuildDescription(build, false, now);
 
             Assert.Equal(String.Format("Build #{0} succeeded in {1} seconds.", build.Id, 42), actual);
         }
@@ -109,7 +109,7 @@ namespace qed.UnitTests
                 Succeeded = false
             };
 
-            var actual = fn.GetBuildDescription(build, now);
+            var actual = fn.GetBuildDescription(build, false, now);
 
             Assert.Equal(String.Format("Build #{0} failed in {1} seconds.", build.Id, 42), actual);
         }
