@@ -44,7 +44,7 @@ QED requires a JSON file named `build.config` in its working directory. The form
 
 Add a [post-receive hook](https://help.github.com/articles/post-receive-hooks) with the event type `push` (the default) and a URL of `http://your-host/events/push`.
 
-Add another [post-receive hook](https://help.github.com/articles/post-receive-hooks) with the event type `pull_request` and a URL of `http://your-host/events/pull-request`. Note that you'll have to do this via the API, as you can't change the event type though github.com. (Eventually, qed will do this for you.)
+Add another [post-receive hook](https://help.github.com/articles/post-receive-hooks) with the event type `pull_request` and a URL of `http://your-host/events/pull-request`. Note that you'll have to [do this via the API](http://blog.half-ogre.com/posts/software/create-pr-hook-for-qed/), as you can't change the event type though github.com. (Eventually, qed will do this for you.)
 
 ## Testing Post-Receive Hooks
 
