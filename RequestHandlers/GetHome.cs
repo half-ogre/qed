@@ -24,6 +24,18 @@ namespace qed
                             id = build.Id,
                             description = fn.GetBuildDescription(build),
                             status = GetBuildStatus(build)
+                        }),
+                        currentBuild = fn.GetCurrentBuild(bc.Owner, bc.Name).To(build => new
+                        {
+                            id = build.Id,
+                            description = fn.GetBuildDescription(build),
+                            status = GetBuildStatus(build)
+                        }),
+                        nextBuild = fn.GetNextBuild(bc.Owner, bc.Name).To(build => new
+                        {
+                            id = build.Id,
+                            description = fn.GetBuildDescription(build),
+                            status = GetBuildStatus(build)
                         })
                     })
                 .ToList();
