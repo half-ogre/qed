@@ -167,7 +167,7 @@
     <Compile Include="RequestModels\Repository.cs" />
     <Compile Include="UnitTests\Functions\ToUnitTests.cs" />
     <Compile Include="UnitTests\Functions\FetchRepositoryUnitTests.cs" />
-    <Compile Include="UnitTests\Functions\CreateFetchRefspec.cs" />
+    <Compile Include="UnitTests\Functions\CreateFetchRefspecUnitTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
