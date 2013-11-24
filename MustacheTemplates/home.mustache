@@ -4,8 +4,14 @@
     <li>
       <a href="/{{owner}}/{{name}}"><h2 class="repository">{{owner}}/{{name}}</h2></a>
       {{#lastBuild}}
-      <p class="build-description">Last: <a href="/{{owner}}/{{name}}/builds/{{id}}" class="build-{{status}}">{{description}}</a></p>
+      <p class="build-description"><b>Last:</b> <a href="/{{owner}}/{{name}}/builds/{{id}}" class="build-{{status}}">{{description}}</a></p>
       {{/lastBuild}}
+      {{#currentBuild}}
+      <p class="build-description"><b>Current:</b> <a href="/{{owner}}/{{name}}/builds/{{id}}" class="build-{{status}}">{{description}}</a></p>
+      {{/currentBuild}}
+      {{#nextBuild}}
+      <p class="build-description"><b>Next:</b> <a href="/{{owner}}/{{name}}/builds/{{id}}" class="build-{{status}}">{{description}}</a></p>
+      {{/nextBuild}}
     </li>
     {{/configuredRepos}}
   </ul>
