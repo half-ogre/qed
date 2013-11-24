@@ -6,31 +6,40 @@ namespace qed
     {
         public static string GetBuildDescription(Build build)
         {
-            return GetBuildDescription(build, DateTimeOffset.UtcNow);
+            return GetBuildDescription(build, false);
         }
 
-        internal static string GetBuildDescription(Build build, DateTimeOffset now)
+        public static string GetBuildDescription(Build build, bool includeRefDescription)
+        {
+            return GetBuildDescription(build, includeRefDescription, DateTimeOffset.UtcNow);
+        }
+
+        internal static string GetBuildDescription(Build build, bool includeRefDescription, DateTimeOffset now)
         {
             if (build == null) throw new ArgumentNullException("build");
+
+            var @ref = "";
+            if (includeRefDescription)
+                @ref = String.Concat(" on ", GetRefDescription(build));
 
             if (!build.Started.HasValue)
             {
                 if (!build.Queued.HasValue)
-                    return String.Format("Build #{0} queued.", build.Id);
+                    return String.Format("Build #{0}{1} queued.", build.Id, @ref);
 
-                return String.Format("Build #{0} queued {1} seconds ago.", build.Id, build.Queued.Value.Since(now));
+                return String.Format("Build #{0}{1} queued {2} seconds ago.", build.Id, @ref, build.Queued.Value.Since(now));
             }
 
             if (!build.Finished.HasValue)
-                return String.Format("Build #{0} started {1} seconds ago.", build.Id, build.Started.Value.Since(now));
+                return String.Format("Build #{0}{1} started {2} seconds ago.", build.Id, @ref, build.Started.Value.Since(now));
 
             if (!build.Succeeded.HasValue)
-                return String.Format("Build #{0} finished in {1} seconds.", build.Id, build.Started.Value.Until(build.Finished.Value));
+                return String.Format("Build #{0}{1} finished in {2} seconds.", build.Id, @ref, build.Started.Value.Until(build.Finished.Value));
 
             if (build.Succeeded.Value)
-                return String.Format("Build #{0} succeeded in {1} seconds.", build.Id, build.Started.Value.Until(build.Finished.Value));
+                return String.Format("Build #{0}{1} succeeded in {2} seconds.", build.Id, @ref, build.Started.Value.Until(build.Finished.Value));
 
-            return String.Format("Build #{0} failed in {1} seconds.", build.Id, build.Started.Value.Until(build.Finished.Value));
+            return String.Format("Build #{0}{1} failed in {2} seconds.", build.Id, @ref, build.Started.Value.Until(build.Finished.Value));
         }
     }
 }
