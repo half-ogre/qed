@@ -100,6 +100,7 @@
     <Compile Include="Functions\To.cs" />
     <Compile Include="Functions\Until.cs" />
     <Compile Include="Functions\Since.cs" />
+    <Compile Include="Functions\GetBuildDescription.cs" />
     <Compile Include="Functions\SetGitHubBuildStarted.cs" />
     <Compile Include="Functions\RunStep.cs" />
     <Compile Include="Functions\GetRefDescription.cs" />
@@ -170,6 +171,7 @@
     <Compile Include="UnitTests\Functions\UntilUnitTests.cs" />
     <Compile Include="UnitTests\Functions\SinceUnitTests.cs" />
     <Compile Include="UnitTests\Functions\ToUnitTests.cs" />
+    <Compile Include="UnitTests\Functions\GetBuildDescriptionUnitTests.cs" />
     <Compile Include="UnitTests\Functions\FetchRepositoryUnitTests.cs" />
     <Compile Include="UnitTests\Functions\CreateFetchRefspecUnitTests.cs" />
   </ItemGroup>
