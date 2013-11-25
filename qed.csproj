@@ -135,7 +135,6 @@
     <Compile Include="Functions\ConfigureBuilder.cs" />
     <Compile Include="Functions\CreateRavenStore.cs" />
     <Compile Include="Functions\OpenRavenSession.cs" />
-    <Compile Include="OwinExtensions\ReadFormAsync.cs" />
     <Compile Include="OwinExtensions\WriteAsync.cs" />
     <Compile Include="OwinMiddleware\Dispatcher.cs" />
     <Compile Include="OwinBuilder.cs" />
