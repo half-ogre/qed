@@ -171,6 +171,7 @@
     <Compile Include="RequestHandlers\GetHome.cs" />
     <Compile Include="RequestHandlers\PostPushEvent.cs" />
     <Compile Include="RequestModels\Repository.cs" />
+    <Compile Include="UnitTests\Functions\SetGitHubBuildStatusUnitTests.cs" />
     <Compile Include="UnitTests\Functions\UntilUnitTests.cs" />
     <Compile Include="UnitTests\Functions\SinceUnitTests.cs" />
     <Compile Include="UnitTests\Functions\ToUnitTests.cs" />
