@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 using fn = qed.Functions;
 
 namespace qed
 {
     public static partial class Handlers
     {
-        public static async Task PostRebuildEvent(
+        public static async Task PostForceEvent(
             IDictionary<string, object> environment,
             Func<IDictionary<string, object>, Task> next)
         {
@@ -19,29 +20,21 @@ namespace qed
 
             var form = await environment.ReadFormAsync();
 
-            var buildIdField = form["build_id"];
+            var payload = form["payload"];
 
-            if (buildIdField == null || buildIdField.Count == 0)
+            if (payload == null || payload.Count == 0)
             {
-                await fail(400, "Entity is missing build identifier.");
+                await fail(400, "Missing payload.");
                 return;
             }
 
-            int buildId;
-            if (!int.TryParse(buildIdField[0], out buildId))
-            {
-                await fail(422, "Build identifier is not a valid GUID.");
-                return;
-            }
+            var @event = payload[0];
 
-            var build = fn.GetBuild(buildId);
-            if (build == null)
-            {
-                environment.SetStatusCode(404);
-                return;
-            }
+            var forceEvent = JsonConvert.DeserializeObject<ForceEvent>(@event);
 
-            var buildConfiguration = fn.GetBuildConfiguration(build.RepositoryOwner, build.RepositoryName);
+            // TODO: validate the event's properties
+
+            var buildConfiguration = fn.GetBuildConfiguration(forceEvent.Repository.Owner.Name, forceEvent.Repository.Name);
             if (buildConfiguration == null)
             {
                 await fail(422, "No build configuraion matches the identified build.");
@@ -51,25 +44,29 @@ namespace qed
             var newBuild = fn.CreateBuild(
                 buildConfiguration.Command,
                 buildConfiguration.CommandArguments,
-                build.RepositoryName,
-                build.RepositoryOwner,
-                build.RepositoryUrl,
-                build.Ref,
-                build.Revision,
+                forceEvent.Repository.Name,
+                forceEvent.Repository.Owner.Name,
+                null,
+                forceEvent.Ref,
+                forceEvent.Revision,
                 "rebuild",
-                buildId.ToString());
+                @event);
 
             var location = String.Format(
-                "http://{0}/{1}/{2}/builds/{3}",
-                await fn.GetHost(),
+                "/{0}/{1}/builds/{2}",
                 newBuild.RepositoryOwner,
                 newBuild.RepositoryName,
                 newBuild.Id);
-            
+
+            var absoluteLocation = String.Format(
+                "http://{0}{1}",
+                await fn.GetHost(),
+                location);
+
             environment.SetStatusCode(201);
             var responseHeaders = environment.GetResponseHeaders();
-            responseHeaders.Add("Location", new [] { location });
-            await environment.Render("rebuild", new { id = newBuild.Id, location});
+            responseHeaders.Add("Location", new [] { absoluteLocation });
+            await environment.Render("force", new { id = newBuild.Id, location});
         }
     }
 }
