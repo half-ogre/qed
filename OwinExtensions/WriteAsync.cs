@@ -8,38 +8,38 @@ namespace qed
 {
     public static partial class OwinExtensions
     {
-        public static Task WriteAsync(
-            this IDictionary<string, object> environment, 
-            string text)
-        {
-            if (environment == null)
-                throw new ArgumentNullException("environment");
+        //public static Task WriteAsync(
+        //    this IDictionary<string, object> environment, 
+        //    string text)
+        //{
+        //    if (environment == null)
+        //        throw new ArgumentNullException("environment");
 
-            if (text == null)
-                throw new ArgumentNullException("text");
+        //    if (text == null)
+        //        throw new ArgumentNullException("text");
 
-            return WriteAsync(environment, text, Encoding.UTF8, environment.GetCallCancelled());
-        }
+        //    return WriteAsync(environment, text, Encoding.UTF8, environment.GetCallCancelled());
+        //}
 
-        public static Task WriteAsync(
-            this IDictionary<string, object> environment, 
-            string text, 
-            Encoding encoding, 
-            CancellationToken cancel)
-        {
-            if (environment == null)
-                throw new ArgumentNullException("environment");
+        //public static Task WriteAsync(
+        //    this IDictionary<string, object> environment, 
+        //    string text, 
+        //    Encoding encoding, 
+        //    CancellationToken cancel)
+        //{
+        //    if (environment == null)
+        //        throw new ArgumentNullException("environment");
             
-            if (text == null)
-                throw new ArgumentNullException("text");
+        //    if (text == null)
+        //        throw new ArgumentNullException("text");
             
-            if (encoding == null)
-                throw new ArgumentNullException("encoding");
+        //    if (encoding == null)
+        //        throw new ArgumentNullException("encoding");
 
-            var buffer = encoding.GetBytes(text);
+        //    var buffer = encoding.GetBytes(text);
 
-            return WriteAsync(environment, buffer, 0, buffer.Length, cancel);
-        }
+        //    return WriteAsync(environment, buffer, 0, buffer.Length, cancel);
+        //}
 
         //public static Task WriteAsync(
         //    this IDictionary<string, object> environment, 

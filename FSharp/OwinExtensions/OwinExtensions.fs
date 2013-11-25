@@ -117,5 +117,12 @@ module OwinExtensions
         WriteAsync environment buffer 0 buffer.Length cancel
 
     [<Extension>]
+    let WriteAsync3 environment (text:string) = 
+        if environment = null then invalidArg "environment" "environment is required"
+        if text = null then invalidArg "text" "text is required"
+
+        WriteAsync2 environment text System.Text.Encoding.UTF8 (GetCallCancelled environment)
+
+    [<Extension>]
     let SetStatusCode (environment:Environment) (statusCode:int) = 
         environment.[ResponseStatusCodeKey] <- statusCode
