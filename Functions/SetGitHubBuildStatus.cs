@@ -6,34 +6,64 @@ namespace qed
 {
     public static partial class Functions
     {
-        public static async Task SetGitHubBuildStatus(
+        public static Task SetGitHubBuildStatus(
             Build build,
             CommitState state)
         {
-            var buildConfiguration = GetBuildConfiguration(
+            return SetGitHubBuildStatus(
+                build,
+                state,
+                GetBuildConfiguration,
+                GetBuildDescription,
+                GetHost,
+                async (token, owner, name, sha, commitState, targetUrl, description) =>
+                {
+                    var gitHubClient = GetGitHubClient();
+                    gitHubClient.Credentials = new Credentials(token);
+
+                    await gitHubClient.Repository.CommitStatus.Create(
+                        owner,
+                        name,
+                        sha,
+                        new NewCommitStatus
+                        {
+                            State = commitState,
+                            TargetUrl = targetUrl,
+                            Description = description
+                        });
+                });
+        }
+
+        internal static async Task SetGitHubBuildStatus(
+            Build build,
+            CommitState state,
+            Func<string, string, BuildConfiguration> getBuildConfiguration,
+            Func<Build, string> getBuildDescription,
+            Func<Task<string>> getHost,
+            Func<string, string, string, string, CommitState, Uri, string, Task> createGitHubCommitStatus)
+        {
+            var buildConfiguration = getBuildConfiguration(
                 build.RepositoryOwner,
                 build.RepositoryName);
 
             if (buildConfiguration == null)
                 throw new Exception("Could not find build configuration.");
 
-            var github = GetGitHubClient();
-            github.Credentials = new Credentials(buildConfiguration.Token);
+            var targetUrl = new Uri(String.Format(
+                "http://{0}/{1}/{2}/builds/{3}",
+                await getHost(),
+                build.RepositoryOwner,
+                build.RepositoryName,
+                build.Id));
 
-            await github.Repository.CommitStatus.Create(
+            await createGitHubCommitStatus(
+                buildConfiguration.Token,
                 build.RepositoryOwner,
                 build.RepositoryName,
                 build.Revision,
-                new NewCommitStatus
-                {
-                    State = state,
-                    TargetUrl = new Uri(String.Format(
-                        "http://{0}/{1}/{2}/builds/{3}",
-                        await GetHost(),
-                        build.RepositoryOwner,
-                        build.RepositoryName,
-                        build.Id))
-                });
+                state,
+                targetUrl,
+                null);
         }
     }
 }
