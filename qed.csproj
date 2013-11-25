@@ -128,6 +128,7 @@
     <Compile Include="OwinExtensions\GetResponseHeaders.cs" />
     <Compile Include="OwinMiddleware\ContentType.cs" />
     <Compile Include="RavenCommands\AppendBuidOutput.cs" />
+    <Compile Include="RavenCommands\SetBuildRevision.cs" />
     <Compile Include="RavenCommands\SetBuildFinished.cs" />
     <Compile Include="RavenCommands\SetBuildStarted.cs" />
     <Compile Include="RavenCommands\CreateBuild.cs" />
