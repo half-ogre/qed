@@ -2,6 +2,7 @@
 module OwinExtensions
     open System
     open System.IO
+    open System.Threading
     open System.Threading.Tasks
     open System.Collections.Generic
     open System.Runtime.CompilerServices
@@ -87,6 +88,33 @@ module OwinExtensions
         match form with
             | null -> createForm 
             | _ -> Task.FromResult form
+
+    [<Extension>]
+    let WriteAsync environment buffer offset count (cancel:CancellationToken) =
+
+        if environment = null then invalidArg "environment" "environment is required"
+        if buffer = null then invalidArg "buffer" "buffer is required"
+
+        if cancel.IsCancellationRequested then
+            let tcs = new TaskCompletionSource<Object>()
+            tcs.TrySetCanceled() |> ignore
+            tcs.Task :> Task
+        else
+            let body = GetResponseBody environment
+            if body = null then
+                raise (InvalidOperationException("The OWIN response body stream is missing from the environment."))
+            else
+                body.WriteAsync(buffer, offset, count, cancel)
+
+    [<Extension>]
+    let WriteAsync2 environment (text:string) (encoding:System.Text.Encoding) cancel =
+        if environment = null then invalidArg "environment" "environment is required"
+        if text = null then invalidArg "text" "text is required"
+        if encoding = null then invalidArg "encoding" "encoding is required"
+
+        let buffer = encoding.GetBytes(text)
+
+        WriteAsync environment buffer 0 buffer.Length cancel
 
     [<Extension>]
     let SetStatusCode (environment:Environment) (statusCode:int) = 
