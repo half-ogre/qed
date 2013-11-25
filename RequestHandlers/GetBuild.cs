@@ -32,6 +32,7 @@ namespace qed
                 name = build.RepositoryName,
                 owner = build.RepositoryOwner,
                 @ref = build.Ref,
+                refDescription = fn.GetRefDescription(build),
                 revision = build.Revision,
                 sha = build.Revision.Substring(0, 7),
                 failed = !build.Succeeded,
