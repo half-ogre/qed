@@ -63,7 +63,7 @@ namespace qed
                 build.Revision,
                 state,
                 targetUrl,
-                null);
+                getBuildDescription(build));
         }
     }
 }

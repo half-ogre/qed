@@ -138,6 +138,24 @@ namespace qed.UnitTests
                     return Task.FromResult((object)null);
                 });
         }
+
+        [Fact]
+        public async Task passes_the_build_description_to_the_GitHub_API()
+        {
+            var build = new Build();
+
+            await fn.SetGitHubBuildStatus(
+                build,
+                CommitState.Success,
+                _fakeGetBuildConfiguration,
+                bld => "theDescription",
+                _fakeGetHost,
+                (token, owner, name, sha, commitState, targetUrl, description) =>
+                {
+                    Assert.Equal("theDescription", description);
+                    return Task.FromResult((object)null);
+                });
+        }
     }
 }
 #endif
