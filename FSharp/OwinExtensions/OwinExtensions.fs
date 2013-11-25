@@ -44,7 +44,7 @@ module OwinExtensions
     let GetResponseHeaders environment =
         Get<Headers> environment ResponseHeadersKey
 
-    let normalize (item:string) = Uri.UnescapeDataString(item.Trim().Replace('+', ' '))
+    let normalize (item:string) = Uri.UnescapeDataString(item.Replace('+', ' '))
 
     let parseForm formText =
         let form = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase) :> Form 
