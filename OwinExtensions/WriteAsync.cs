@@ -41,32 +41,32 @@ namespace qed
             return WriteAsync(environment, buffer, 0, buffer.Length, cancel);
         }
 
-        public static Task WriteAsync(
-            this IDictionary<string, object> environment, 
-            byte[] buffer, 
-            int offset, 
-            int count, 
-            CancellationToken cancel)
-        {
-            if (environment == null)
-                throw new ArgumentNullException("environment");
+        //public static Task WriteAsync(
+        //    this IDictionary<string, object> environment, 
+        //    byte[] buffer, 
+        //    int offset, 
+        //    int count, 
+        //    CancellationToken cancel)
+        //{
+        //    if (environment == null)
+        //        throw new ArgumentNullException("environment");
 
-            if (buffer == null)
-                throw new ArgumentNullException("buffer");
+        //    if (buffer == null)
+        //        throw new ArgumentNullException("buffer");
 
-            if (cancel.IsCancellationRequested)
-            {
-                var tcs = new TaskCompletionSource<object>();
-                tcs.TrySetCanceled();
-                return tcs.Task;
-            }
+        //    if (cancel.IsCancellationRequested)
+        //    {
+        //        var tcs = new TaskCompletionSource<object>();
+        //        tcs.TrySetCanceled();
+        //        return tcs.Task;
+        //    }
 
-            var body = environment.GetResponseBody();
+        //    var body = environment.GetResponseBody();
 
-            if (body == null)
-                throw new InvalidOperationException("The OWIN response body stream is missing from the environment.");
+        //    if (body == null)
+        //        throw new InvalidOperationException("The OWIN response body stream is missing from the environment.");
 
-            return body.WriteAsync(buffer, offset, count, cancel);
-        }
+        //    return body.WriteAsync(buffer, offset, count, cancel);
+        //}
     }
 }
