@@ -47,7 +47,7 @@ module OwinExtensions
 
     let normalize (item:string) = Uri.UnescapeDataString(item.Replace('+', ' '))
 
-    let parseForm formText =
+    let ParseForm formText =
         let form = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase) :> Form 
 
         if String.IsNullOrEmpty(formText) then
@@ -79,7 +79,7 @@ module OwinExtensions
             async {
                 use streamReader = new StreamReader (GetResponseBody environment) 
                 let! formText = Async.AwaitTask(streamReader.ReadToEndAsync())
-                let form = parseForm formText
+                let form = ParseForm formText
                 environment.[RequestFormKey] <- form
                 return form
                 }

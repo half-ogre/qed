@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Xunit;
-using fn = qed.Functions;
+using fn = OwinExtensions;
 
 #if DEBUG
 namespace qed.UnitTests
