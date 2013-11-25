@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Raven.Abstractions.Data;
 
 namespace qed
 {
@@ -40,11 +41,9 @@ namespace qed
                         build.Id));
             logBuildMessage(""); // this line intentionally left blank
 
-            var succeeded = false;
-
             try
             {
-                succeeded = 
+                var succeeded = 
                     await SetGitHubBuildStarted(build, logBuildMessage) &&
                     await CloneRepository(buildConfiguration, build, repositoryOwnerDirectory, repositoryDirectory, logBuildMessage) &&
                     await CleanRepository(repositoryDirectory, logBuildMessage) &&
@@ -52,18 +51,18 @@ namespace qed
                     await ResetRepository(build, repositoryDirectory, logBuildMessage) &&
                     await RunBuild(build, repositoryDirectory, logBuildMessage);
 
+                SetBuildFinished(build, succeeded, DateTimeOffset.UtcNow);
+                
                 await SetGitHubBuildFinished(build, succeeded, logBuildMessage);
             }
             catch (Exception ex)
             {
-                succeeded = false;
+                SetBuildFinished(build, false, DateTimeOffset.UtcNow);
                 logBuildMessage("ERROR: An unexpected error occurred: ");
                 logBuildMessage(ex.ToString());
             }
             finally
             {
-                SetBuildFinished(build, succeeded, DateTimeOffset.UtcNow);
-
                 logBuildMessage(
                     String.Format(
                         "FINISHED: Building {0} at revision {1} in {2} seconds.",
