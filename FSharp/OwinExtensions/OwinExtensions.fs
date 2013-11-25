@@ -1,14 +1,21 @@
 ﻿[<System.Runtime.CompilerServices.Extension>]
 module OwinExtensions
     open System
+    open System.IO
+    open System.Threading.Tasks
     open System.Collections.Generic
     open System.Runtime.CompilerServices
     open Constants.Owin
 
-    type dict = IDictionary<string, Object>
+    type Environment = IDictionary<string, Object>
+    type Form = IDictionary<string, List<string>>
+    type Headers = IDictionary<string, string[]>
+
+    [<Literal>]
+    let RequestFormKey = "owinextensions.RequestForm"
 
     [<Extension>]
-    let Get<'a> (environment:IDictionary<string, System.Object>) key =
+    let Get<'a> (environment:Environment) key =
         match environment.TryGetValue(key) with
             | true, value -> value :?> 'a
             | _, _ -> Unchecked.defaultof<'a>
@@ -27,20 +34,20 @@ module OwinExtensions
 
     [<Extension>]
     let GetRequestHeaders environment = 
-        Get<IDictionary<string, string[]>> environment RequestHeadersKey
+        Get<Headers> environment RequestHeadersKey
 
     [<Extension>]
     let GetResponseBody environment =
-        Get<System.IO.Stream> environment ResponseBodyKey
+        Get<Stream> environment ResponseBodyKey
 
     [<Extension>]
     let GetResponseHeaders environment =
-        Get<IDictionary<string, string[]>> environment ResponseHeadersKey
+        Get<Headers> environment ResponseHeadersKey
 
     let normalize (item:string) = Uri.UnescapeDataString(item.Trim().Replace('+', ' '))
 
     let parseForm formText =
-        let form = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase)
+        let form = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase) :> Form 
 
         if String.IsNullOrEmpty(formText) then
             form
@@ -63,5 +70,24 @@ module OwinExtensions
             parse formText |> populateDictionary
 
     [<Extension>]
-    let SetStatusCode (environment:dict) (statusCode:int) = 
+    let ReadFormAsync environment : Task<Form> =
+
+        let form = Get<Form> environment RequestFormKey
+
+        let createForm =
+            async {
+                use streamReader = new StreamReader (GetResponseBody environment) 
+                let! formText = Async.AwaitTask(streamReader.ReadToEndAsync())
+                let form = parseForm formText
+                environment.[RequestFormKey] <- form
+                return form
+                }
+            |> Async.StartAsTask // TODO: is this spawning unnecessary threads? 
+
+        match form with
+            | null -> createForm 
+            | _ -> Task.FromResult form
+
+    [<Extension>]
+    let SetStatusCode (environment:Environment) (statusCode:int) = 
         environment.[ResponseStatusCodeKey] <- statusCode
