@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Threading.Tasks;
 using Octokit;
 
@@ -11,11 +10,9 @@ namespace qed
             Build build,
             CommitState state)
         {
-            var buildConfigurations = GetBuildConfigurations();
-
-            var buildConfiguration = buildConfigurations.FirstOrDefault(bc =>
-                bc.Name.Equals(build.RepositoryName, StringComparison.OrdinalIgnoreCase) &&
-                bc.Owner.Equals(build.RepositoryOwner, StringComparison.OrdinalIgnoreCase));
+            var buildConfiguration = GetBuildConfiguration(
+                build.RepositoryOwner,
+                build.RepositoryName);
 
             if (buildConfiguration == null)
                 throw new Exception("Could not find build configuration.");
