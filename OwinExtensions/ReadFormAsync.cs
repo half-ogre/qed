@@ -7,7 +7,7 @@ namespace qed
 {
     public static partial class Functions
     {
-        static IDictionary<string, List<string>> ParseForm(string formText)
+        internal static IDictionary<string, List<string>> ParseForm(string formText)
         {
             var form = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
