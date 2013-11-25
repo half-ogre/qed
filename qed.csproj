@@ -125,7 +125,6 @@
     <Compile Include="Functions\SetGitHubBuildFinished.cs" />
     <Compile Include="Functions\SetGitHubBuildStatus.cs" />
     <Compile Include="Functions\SetConfiguration.cs" />
-    <Compile Include="OwinExtensions\GetResponseHeaders.cs" />
     <Compile Include="OwinMiddleware\ContentType.cs" />
     <Compile Include="RavenCommands\AppendBuidOutput.cs" />
     <Compile Include="RavenCommands\SetBuildFinished.cs" />
@@ -136,14 +135,7 @@
     <Compile Include="Functions\ConfigureBuilder.cs" />
     <Compile Include="Functions\CreateRavenStore.cs" />
     <Compile Include="Functions\OpenRavenSession.cs" />
-    <Compile Include="OwinExtensions\GetPath.cs" />
-    <Compile Include="OwinExtensions\GetMethod.cs" />
     <Compile Include="OwinExtensions\ReadFormAsync.cs" />
-    <Compile Include="OwinExtensions\GetResponseBody.cs" />
-    <Compile Include="OwinExtensions\GetRequestHeaders.cs" />
-    <Compile Include="OwinExtensions\GetCallCancelled.cs" />
-    <Compile Include="OwinExtensions\Get.cs" />
-    <Compile Include="OwinExtensions\SetStatusCode.cs" />
     <Compile Include="OwinExtensions\WriteAsync.cs" />
     <Compile Include="OwinMiddleware\Dispatcher.cs" />
     <Compile Include="OwinBuilder.cs" />
@@ -196,6 +188,12 @@
     <Content Include="MustacheTemplates\home.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="FSharp\OwinExtensions\OwinExtensions.fsproj">
+      <Project>{c69ed03f-b94d-43e7-baf1-7237ced853e0}</Project>
+      <Name>OwinExtensions</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
