@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Raven.Abstractions.Data;
 
 namespace qed
 {
@@ -37,18 +36,19 @@ namespace qed
                     String.Format(
                         "STARTED: Building {0} at revision {1} (#{2}).",
                         GetRefDescription(build),
-                        build.Revision,
+                        build.Revision ?? "HEAD",
                         build.Id));
             logBuildMessage(""); // this line intentionally left blank
 
             try
             {
                 var succeeded = 
-                    await SetGitHubBuildStarted(build, logBuildMessage) &&
                     await CloneRepository(buildConfiguration, build, repositoryOwnerDirectory, repositoryDirectory, logBuildMessage) &&
                     await CleanRepository(repositoryDirectory, logBuildMessage) &&
                     await FetchRepository(build, repositoryDirectory, logBuildMessage) &&
+                    await GetHeadSha(build, repositoryDirectory, logBuildMessage) &&
                     await ResetRepository(build, repositoryDirectory, logBuildMessage) &&
+                    await SetGitHubBuildStarted(build, logBuildMessage) &&
                     await RunBuild(build, repositoryDirectory, logBuildMessage);
 
                 SetBuildFinished(build, succeeded, DateTimeOffset.UtcNow);
