@@ -40,7 +40,7 @@
                 parse formText |> populateDictionary
 
     [<Extension>]
-    type EnvironmentExtensions() =
+    type x() =
 
         [<Extension>]
         static member inline Get<'a> (environment:Environment) key =
@@ -50,36 +50,36 @@
 
         [<Extension>]
         static member inline GetCallCancelled environment =
-            EnvironmentExtensions.Get<System.Threading.CancellationToken> environment CallCancelledKey
+            x.Get<System.Threading.CancellationToken> environment CallCancelledKey
 
         [<Extension>]
         static member inline GetMethod environment =
-            EnvironmentExtensions.Get<string> environment RequestMethodKey
+            x.Get<string> environment RequestMethodKey
 
         [<Extension>]
         static member inline GetPath environment =
-            EnvironmentExtensions.Get<string> environment RequestPathKey
+            x.Get<string> environment RequestPathKey
 
         [<Extension>]
         static member inline GetRequestHeaders environment = 
-            EnvironmentExtensions.Get<Headers> environment RequestHeadersKey
+            x.Get<Headers> environment RequestHeadersKey
 
         [<Extension>]
         static member inline GetResponseBody environment =
-            EnvironmentExtensions.Get<Stream> environment ResponseBodyKey
+            x.Get<Stream> environment ResponseBodyKey
 
         [<Extension>]
         static member inline GetResponseHeaders environment =
-            EnvironmentExtensions.Get<Headers> environment ResponseHeadersKey
+            x.Get<Headers> environment ResponseHeadersKey
 
         [<Extension>]
         static member inline ReadFormAsync environment : Task<Form> =
 
-            let form = EnvironmentExtensions.Get<Form> environment RequestFormKey
+            let form = x.Get<Form> environment RequestFormKey
 
             let createForm =
                 async {
-                    use streamReader = new StreamReader (EnvironmentExtensions.GetResponseBody environment) 
+                    use streamReader = new StreamReader (x.GetResponseBody environment) 
                     let! formText = Async.AwaitTask(streamReader.ReadToEndAsync())
                     let form = Helpers.ParseForm formText
                     environment.[RequestFormKey] <- form
@@ -101,7 +101,7 @@
                 tcs.TrySetCanceled() |> ignore
                 tcs.Task :> Task
             else
-                match EnvironmentExtensions.GetResponseBody environment with
+                match x.GetResponseBody environment with
                     | null -> raise (InvalidOperationException("The OWIN response body stream is missing from the environment."))
                     | body -> body.WriteAsync(buffer, offset, count, cancel)
 
@@ -112,15 +112,15 @@
             if encoding = null then invalidArg "encoding" "encoding is required"
 
             let buffer = encoding.GetBytes(text)
-            EnvironmentExtensions.WriteAsync (environment, buffer, 0, buffer.Length, cancel)
+            x.WriteAsync (environment, buffer, 0, buffer.Length, cancel)
 
         [<Extension>]
         static member inline WriteAsync (environment, text) = 
             if environment = null then invalidArg "environment" "environment is required"
             if text = null then invalidArg "text" "text is required"
 
-            let token = EnvironmentExtensions.GetCallCancelled environment
-            EnvironmentExtensions.WriteAsync (environment, text, Encoding.UTF8, token)
+            let token = x.GetCallCancelled environment
+            x.WriteAsync (environment, text, Encoding.UTF8, token)
 
         [<Extension>]
         static member inline SetStatusCode (environment:Environment) (statusCode:int) = 
