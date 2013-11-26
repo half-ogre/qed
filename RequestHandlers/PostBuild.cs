@@ -44,7 +44,7 @@ namespace qed
 
             var branchOrPr = form["branch-or-pr"].FirstOrDefault();
 
-            if (branchOrPr == null)
+            if (String.IsNullOrEmpty(branchOrPr))
             {
                 await fail(400, "A branch or pull request number is required.");
                 return;
