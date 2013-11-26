@@ -53,7 +53,8 @@ namespace qed
 
                 SetBuildFinished(build, succeeded, DateTimeOffset.UtcNow);
                 
-                await SetGitHubBuildFinished(build, succeeded, logBuildMessage);
+                if (build.Revision != null)
+                    await SetGitHubBuildFinished(build, succeeded, logBuildMessage);
             }
             catch (Exception ex)
             {
