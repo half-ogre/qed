@@ -46,7 +46,6 @@ namespace qed
                 buildConfiguration.CommandArguments,
                 forceEvent.Repository.Name,
                 forceEvent.Repository.Owner.Name,
-                null,
                 forceEvent.Ref,
                 forceEvent.Revision,
                 "rebuild",
