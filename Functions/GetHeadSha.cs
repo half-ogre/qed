@@ -39,13 +39,22 @@ namespace qed
                 var head = (LibGit2Sharp.Reference)null;
                 try
                 {
-                    var @ref = build.Ref;
-
-                    if (@ref.StartsWith("refs/pull", StringComparison.OrdinalIgnoreCase))
+                    string @ref;
+                    if (build.Ref.StartsWith("refs/heads/", StringComparison.OrdinalIgnoreCase))
                     {
-                        var slashafterPrNumberIndex = @ref.IndexOf("/", 10, StringComparison.InvariantCultureIgnoreCase);
-                        var prNumber = @ref.Substring(10, slashafterPrNumberIndex - 10);
+                        var branch = build.Ref.Substring(11);
+                        @ref = String.Format("refs/remotes/origin/{0}", branch);
+                    }
+
+                    else if (build.Ref.StartsWith("refs/pull", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var slashafterPrNumberIndex = build.Ref.IndexOf("/", 10, StringComparison.InvariantCultureIgnoreCase);
+                        var prNumber = build.Ref.Substring(10, slashafterPrNumberIndex - 10);
                         @ref = String.Concat("refs/remotes/origin/pr/", prNumber);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(String.Format("Unexpected type of ref: {0}.", build.Ref));
                     }
 
                     head = repo.Refs[@ref];
