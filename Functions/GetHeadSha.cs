@@ -39,7 +39,19 @@ namespace qed
                 var head = (LibGit2Sharp.Reference)null;
                 try
                 {
-                    head = repo.Refs[build.Ref];
+                    var @ref = build.Ref;
+
+                    if (@ref.StartsWith("refs/pull", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var slashafterPrNumberIndex = @ref.IndexOf("/", 10, StringComparison.InvariantCultureIgnoreCase);
+                        var prNumber = @ref.Substring(10, slashafterPrNumberIndex - 10);
+                        @ref = String.Concat("refs/remotes/origin/pr/", prNumber);
+                    }
+
+                    head = repo.Refs[@ref];
+
+                    if (head == null)
+                        throw new InvalidOperationException(String.Format("The specified ref, '{0}', does not exist.", @ref));
                 }
                 catch (Exception ex)
                 {
