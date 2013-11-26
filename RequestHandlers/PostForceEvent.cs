@@ -66,7 +66,7 @@ namespace qed
             environment.SetStatusCode(201);
             var responseHeaders = environment.GetResponseHeaders();
             responseHeaders.Add("Location", new [] { absoluteLocation });
-            await environment.Render("force", new { id = newBuild.Id, location});
+            await environment.Render("queued", new { id = newBuild.Id, location});
         }
     }
 }

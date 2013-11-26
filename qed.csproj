@@ -197,7 +197,7 @@
     <Content Include="MustacheTemplates\build.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="MustacheTemplates\force.mustache">
+    <Content Include="MustacheTemplates\queued.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
