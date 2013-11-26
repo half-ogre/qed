@@ -70,7 +70,6 @@ namespace qed
                 buildConfiguration.CommandArguments,
                 prEvent.Repository.Name,
                 prEvent.Repository.Owner.Login,
-                prEvent.Repository.HtmlUrl,
                 String.Concat("refs/pull/", prEvent.Number, "/head"),
                 prEvent.PullRequest.Head.Sha,
                 "pull_request",

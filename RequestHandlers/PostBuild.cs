@@ -61,7 +61,6 @@ namespace qed
                 buildConfiguration.CommandArguments,
                 name,
                 owner,
-                null,
                 @ref,
                 null,
                 null,
