@@ -23,20 +23,28 @@ namespace qed
                 return;
             }
 
-            var builds = fn.GetBuilds(buildConfiguration.Owner, buildConfiguration.Name)
+            var responseModel = new
+            {
+                owner = buildConfiguration.Owner,
+                name = buildConfiguration.Name,
+                builds = CreateBuildsResponseModel(buildConfiguration)
+            };
+
+            await environment.Render(
+                "builds",
+                responseModel);
+        }
+
+        static object CreateBuildsResponseModel(BuildConfiguration buildConfiguration)
+        {
+            return fn.GetBuilds(buildConfiguration.Owner, buildConfiguration.Name)
                 .Reverse()
-                .Select(build => new {
+                .Select(build => new
+                {
                     id = build.Id,
                     description = fn.GetBuildDescription(build, true),
                     status = GetBuildStatus(build)
                 });
-            
-            await environment.Render("builds", new
-            {
-                owner = buildConfiguration.Owner, 
-                name = buildConfiguration.Name,  
-                builds
-            });
         }
 
         static string GetBuildStatus(Build build)

@@ -160,6 +160,7 @@
     <Compile Include="RavenQueries\GetLastFinishedBuild.cs" />
     <Compile Include="RavenQueries\GetBuilds.cs" />
     <Compile Include="RavenQueries\GetBuild.cs" />
+    <Compile Include="RequestHandlers\PostBuild.cs" />
     <Compile Include="RequestHandlers\PostForceEvent.cs" />
     <Compile Include="RequestHandlers\PostPullRequestEvent.cs" />
     <Compile Include="RequestHandlers\GetBuild.cs" />
@@ -197,7 +198,7 @@
     <Content Include="MustacheTemplates\build.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="MustacheTemplates\force.mustache">
+    <Content Include="MustacheTemplates\queued.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
