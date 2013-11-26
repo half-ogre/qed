@@ -18,6 +18,7 @@
                 dispatcher.Post("/events/force", Handlers.PostForceEvent);
                 dispatcher.Get("/{owner}/{name}", Handlers.GetBuilds);
                 dispatcher.Get("/{owner}/{name}/builds/{id}", Handlers.GetBuild);
+                dispatcher.Post("/{owner}/{name}/builds", Handlers.PostBuild);
             }));
         }
     }

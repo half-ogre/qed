@@ -160,6 +160,7 @@
     <Compile Include="RavenQueries\GetLastFinishedBuild.cs" />
     <Compile Include="RavenQueries\GetBuilds.cs" />
     <Compile Include="RavenQueries\GetBuild.cs" />
+    <Compile Include="RequestHandlers\PostBuild.cs" />
     <Compile Include="RequestHandlers\PostForceEvent.cs" />
     <Compile Include="RequestHandlers\PostPullRequestEvent.cs" />
     <Compile Include="RequestHandlers\GetBuild.cs" />
