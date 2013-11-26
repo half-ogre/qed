@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Linq;
 using Xunit;
-using fn = OwinExtensions;
+using fn = OwinExtensions.Helpers;
+using f2 = OwinExtensions.EnvironmentExtensions;
 
 #if DEBUG
 namespace qed.UnitTests
