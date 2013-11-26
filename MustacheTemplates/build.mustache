@@ -5,10 +5,11 @@
     <input name="payload" type="hidden" value='{ "ref": "{{ref}}", "repository": { "owner": { "name": "{{owner}}" }, "name": "{{name}}" } }' />
     <button type="submit">Build {{refDescription}}</button>
   </form>
-
+  {{#revision}}
   <form action="/events/force" method="POST">
     <input name="payload" type="hidden" value='{ "revision": "{{revision}}", "ref": "{{ref}}", "repository": { "owner": { "name": "{{owner}}" }, "name": "{{name}}" } }' />
     <button type="submit">Rebuild {{sha}}</button>
   </form>
+  {{/revision}}
   {{/failed}}
   <pre>{{output}}</pre>
