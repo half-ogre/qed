@@ -1,4 +1,5 @@
-﻿module UnitTests.the_parseForm_function
+﻿#if DEBUG
+module UnitTests.the_parseForm_function
 
 open System
 open System.Linq
@@ -75,3 +76,5 @@ let decodes_values_with_spaces() =
 
     Assert.Equal(1, form.Count)
     Assert.Equal("value one", form.Values.ElementAt(0).ElementAt(0))
+
+#endif
