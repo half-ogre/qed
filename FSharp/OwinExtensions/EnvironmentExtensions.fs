@@ -40,42 +40,43 @@
                 parse formText |> populateDictionary
 
     [<Extension>]
+    [<AbstractClass; Sealed>]
     type x() =
 
         [<Extension>]
-        static member inline Get<'a> (environment:Environment) key =
+        static member Get<'a> (environment:Environment, key) =
             match environment.TryGetValue(key) with
                 | true, value -> value :?> 'a
                 | _, _ -> Unchecked.defaultof<'a>
 
         [<Extension>]
-        static member inline GetCallCancelled environment =
-            x.Get<System.Threading.CancellationToken> environment CallCancelledKey
+        static member GetCallCancelled (environment) =
+            x.Get<CancellationToken> (environment, CallCancelledKey)
 
         [<Extension>]
-        static member inline GetMethod environment =
-            x.Get<string> environment RequestMethodKey
+        static member GetMethod (environment) =
+            x.Get<string> (environment, RequestMethodKey)
 
         [<Extension>]
-        static member inline GetPath environment =
-            x.Get<string> environment RequestPathKey
+        static member GetPath (environment) =
+            x.Get<string> (environment, RequestPathKey)
 
         [<Extension>]
-        static member inline GetRequestHeaders environment = 
-            x.Get<Headers> environment RequestHeadersKey
+        static member GetRequestHeaders (environment) = 
+            x.Get<Headers> (environment, RequestHeadersKey)
 
         [<Extension>]
-        static member inline GetResponseBody environment =
-            x.Get<Stream> environment ResponseBodyKey
+        static member GetResponseBody (environment) =
+            x.Get<Stream> (environment, ResponseBodyKey)
 
         [<Extension>]
-        static member inline GetResponseHeaders environment =
-            x.Get<Headers> environment ResponseHeadersKey
+        static member GetResponseHeaders (environment) =
+            x.Get<Headers> (environment, ResponseHeadersKey)
 
         [<Extension>]
-        static member inline ReadFormAsync environment : Task<Form> =
+        static member ReadFormAsync (environment) : Task<Form> =
 
-            let form = x.Get<Form> environment RequestFormKey
+            let form = x.Get<Form> (environment, RequestFormKey)
 
             let createForm =
                 async {
@@ -92,7 +93,7 @@
                 | _ -> Task.FromResult form
 
         [<Extension>]
-        static member inline WriteAsync (environment, buffer, offset, count, cancel:CancellationToken) =
+        static member WriteAsync (environment, buffer, offset, count, cancel:CancellationToken) =
             if environment = null then invalidArg "environment" "environment is required"
             if buffer = null then invalidArg "buffer" "buffer is required"
 
@@ -106,7 +107,7 @@
                     | body -> body.WriteAsync(buffer, offset, count, cancel)
 
         [<Extension>]
-        static member inline WriteAsync (environment, (text:string), (encoding:Encoding), cancel) =
+        static member WriteAsync (environment, text:string, encoding:Encoding, cancel) =
             if environment = null then invalidArg "environment" "environment is required"
             if text = null then invalidArg "text" "text is required"
             if encoding = null then invalidArg "encoding" "encoding is required"
@@ -115,7 +116,7 @@
             x.WriteAsync (environment, buffer, 0, buffer.Length, cancel)
 
         [<Extension>]
-        static member inline WriteAsync (environment, text) = 
+        static member WriteAsync (environment, text) = 
             if environment = null then invalidArg "environment" "environment is required"
             if text = null then invalidArg "text" "text is required"
 
@@ -123,5 +124,5 @@
             x.WriteAsync (environment, text, Encoding.UTF8, token)
 
         [<Extension>]
-        static member inline SetStatusCode (environment:Environment) (statusCode:int) = 
+        static member SetStatusCode (environment:Environment, statusCode:int) = 
             environment.[ResponseStatusCodeKey] <- statusCode
