@@ -13,10 +13,10 @@
     type Form = IDictionary<string, List<string>>
     type Headers = IDictionary<string, string[]>
 
-    module Helpers =
+    module internal helpers =
         let private normalize (item:string) = Uri.UnescapeDataString(item.Replace('+', ' '))
 
-        let ParseForm formText =
+        let parseForm formText =
             let form = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase) :> Form 
 
             if String.IsNullOrEmpty(formText) then
@@ -82,7 +82,7 @@
                 async {
                     use streamReader = new StreamReader (EnvironmentExt.GetResponseBody environment) 
                     let! formText = Async.AwaitTask(streamReader.ReadToEndAsync())
-                    let form = Helpers.ParseForm formText
+                    let form = helpers.parseForm formText
                     environment.[RequestFormKey] <- form
                     return form
                     }
