@@ -77,4 +77,14 @@ let decodes_values_with_spaces() =
     Assert.Equal(1, form.Count)
     Assert.Equal("value one", form.Values.ElementAt(0).ElementAt(0))
 
+[<Fact>] 
+let parses_a_key_with_no_value() =
+    let  formText = "key="
+
+    let form = parseForm formText
+
+    Assert.Equal(1, form.Count)
+    Assert.Equal("key", form.Keys.ElementAt(0))
+    Assert.Equal("", form.Values.ElementAt(0).ElementAt(0))
+
 #endif
