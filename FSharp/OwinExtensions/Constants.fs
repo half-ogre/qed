@@ -1,11 +1,25 @@
-﻿module Constants.Owin
+﻿module OwinExtensions.Constants
 
-    let CallCancelledKey = "owin.CallCancelled"
-    let RequestHeadersKey = "owin.RequestHeaders"
-    let RequestMethodKey = "owin.RequestMethod"
-    let RequestPathKey = "owin.RequestPath"
-    let ResponseBodyKey = "owin.ResponseBody"
-    let ResponseHeadersKey = "owin.ResponseHeaders"
-    let ResponseStatusCodeKey = "owin.ResponseStatusCode"
+    [<Literal>]
+    let internal CallCancelledKey = "owin.CallCancelled"
+   
+    [<Literal>]
+    let internal RequestHeadersKey = "owin.RequestHeaders"
+    
+    [<Literal>]
+    let internal RequestMethodKey = "owin.RequestMethod"
+    
+    [<Literal>]
+    let internal RequestPathKey = "owin.RequestPath"
+    
+    [<Literal>]
+    let internal ResponseBodyKey = "owin.ResponseBody"
+    
+    [<Literal>]
+    let internal ResponseHeadersKey = "owin.ResponseHeaders"
+    
+    [<Literal>]
+    let internal ResponseStatusCodeKey = "owin.ResponseStatusCode"
 
+    [<Literal>]
     let RequestFormKey = "owinextensions.RequestForm"
