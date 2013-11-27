@@ -1,4 +1,5 @@
 ﻿using System;
+using Mono.Options;
 using Nowin;
 using fn = qed.Functions;
 using Task = System.Threading.Tasks.Task;
@@ -7,8 +8,41 @@ namespace qed
 {
     class Program
     {
-        static void Main()
+        static void Main(string[] args)
         {
+            string passwordArg = null;
+            var showHelp = false;
+            string userArg = null;
+
+            var options = new OptionSet
+            {
+                {"u|user=", v => userArg = v},
+                {"p|password=", v => passwordArg = v},
+                {"h|?|help", v => showHelp = v != null}
+            };
+
+            try
+            {
+
+                options.Parse(args);
+            }
+            catch (OptionException optionEx)
+            {
+                Console.Write("qed: ");
+                Console.WriteLine(optionEx.Message);
+                Console.WriteLine("Try `greet --help' for more information.");
+                return;
+            }
+
+            if (showHelp)
+            {
+                ShowHelp(options);
+                return;
+            }
+
+            fn.SetConfiguration(Constants.Args.UserKey, userArg);
+            fn.SetConfiguration(Constants.Args.PasswordKey, passwordArg);
+
             var appBuilder = new OwinBuilder();
             
             fn.ConfigureBuilder(appBuilder);
@@ -59,5 +93,14 @@ namespace qed
                 }
             }
         }
+
+        static void ShowHelp(OptionSet options)
+        {
+            Console.WriteLine("Usage: qed.exe [options]");
+            Console.WriteLine();
+            Console.WriteLine("Options:");
+            options.WriteOptionDescriptions(Console.Out);
+        }
+
     }
 }

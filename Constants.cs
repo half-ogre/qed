@@ -2,6 +2,12 @@
 {
     public static class Constants
     {
+        public static class Args
+        {
+            public const string PasswordKey = "password";
+            public const string UserKey = "user";
+        }
+
         public static class Configuration
         {
             public const string BaseDirectoryKey = "BaseDirectory";
