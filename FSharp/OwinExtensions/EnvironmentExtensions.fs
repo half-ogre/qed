@@ -16,28 +16,24 @@ type Headers = IDictionary<string, string[]>
 module internal helpers =
     let private normalize (item:string) = Uri.UnescapeDataString(item.Replace('+', ' '))
 
+    let private parse (s:string) =
+        s.Split([|'&'|])
+        |> Array.map (fun pair -> pair.Split([|'='|]))
+        |> Array.map (Array.map normalize)
+        |> Array.map (fun pair -> pair.[0], pair.[1])
+        |> Array.toList
+
     let parseForm formText =
         let form = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase) :> Form 
 
-        if String.IsNullOrEmpty(formText) then
-            form
-        else
-            let parse (s:string) =
-                s.Split([|'&'|])
-                |> Array.map (fun pair -> pair.Split([|'='|]))
-                |> Array.map (Array.map normalize)
-                |> Array.map (fun pair -> pair.[0], pair.[1])
-                |> Array.toList
+        if not (String.IsNullOrEmpty formText) then
                 
-            let rec populateDictionary list =
-                match list with
-                | [] -> form
-                | (name,value)::tail ->
-                    match form.TryGetValue(name) with
-                        | false, _ -> form.Add(name, new List<string>([|value|])); populateDictionary tail
-                        | _, existing -> existing.Add value; populateDictionary tail
+            for (name,value) in parse formText do
+                match form.TryGetValue(name) with
+                    | false, _ -> form.Add(name, new List<string>([|value|]))
+                    | _, existing -> existing.Add value
 
-            parse formText |> populateDictionary
+        form
 
 [<Extension>]
 [<AbstractClass; Sealed>]
