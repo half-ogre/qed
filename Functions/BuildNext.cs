@@ -47,13 +47,12 @@ namespace qed
                     FetchRepository(build, repositoryDirectory, logBuildMessage) &&
                     GetHeadSha(build, repositoryDirectory, logBuildMessage) &&
                     ResetRepository(build, repositoryDirectory, logBuildMessage) &&
-                    SetGitHubBuildStarted(build, logBuildMessage) &&
+                    SetGitHubBuildStarted(buildConfiguration, build, logBuildMessage) &&
                     RunBuild(build, repositoryDirectory, logBuildMessage);
 
                 SetBuildFinished(build, succeeded, DateTimeOffset.UtcNow);
-
-                if (build.Revision != null)
-                    SetGitHubBuildFinished(build, succeeded, logBuildMessage);
+                
+                SetGitHubBuildFinished(buildConfiguration, build, succeeded, logBuildMessage);
             }
             catch (Exception ex)
             {

@@ -6,6 +6,7 @@ namespace qed
     public static partial class Functions
     {
         public static bool SetGitHubBuildStarted(
+            BuildConfiguration buildConfiguration,
             Build build,
             Action<string> logBuildMessage)
         {
@@ -13,6 +14,12 @@ namespace qed
 
             return RunStep(() =>
             {
+                if (buildConfiguration.Token == null)
+                {
+                    logBuildMessage("The build configuration has no token; skipping.");
+                    return true;
+                }
+
                 SetGitHubBuildStatus(build, CommitState.Pending);
                 return true;
             }, logBuildMessage);
