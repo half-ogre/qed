@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace qed
 {
@@ -9,34 +10,60 @@ namespace qed
             Process process, 
             Action<string> log)
         {
-            log(String.Format(
-                "Running {0} {1} in {2}", 
-                process.StartInfo.FileName,
-                process.StartInfo.Arguments,
-                process.StartInfo.WorkingDirectory));
+            const int timeout = 5 /* minutes */ * 60 /* seconds */ * 1000 /* milliseconds */;
             
-            // TODO: log start info
-            // TODO: use a timeout
-            process.Start();
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
 
-            var output = process.StandardOutput
-                .ReadToEnd()
-                .TrimEnd();
+            var getRemainingTimeout = new Func<int>(() =>
+            {
+                if (stopwatch.ElapsedMilliseconds >= timeout)
+                    return 0;
 
-            var errors = process.StandardError
-                .ReadToEnd()
-                .TrimEnd();
+                return timeout - unchecked((int)stopwatch.ElapsedMilliseconds);
+            });
 
-            process.WaitForExit();
-            var exitCode = process.ExitCode;
-            process.Dispose();
+            try
+            {
+                log(String.Format(
+                    "Running {0} {1} in {2}",
+                    process.StartInfo.FileName,
+                    process.StartInfo.Arguments,
+                    process.StartInfo.WorkingDirectory));
 
-            if (exitCode == 0 && !String.IsNullOrEmpty(output))
-                log(output);
-            else if (!String.IsNullOrEmpty(errors))
-                log(errors);
+                process.Start();
 
-            return exitCode;
+                var outputTask = new Task(() =>
+                {
+                    while (!process.StandardOutput.EndOfStream)
+                        log(process.StandardOutput.ReadLine());
+                });
+                outputTask.Start();
+
+                var errorTask = new Task(() =>
+                {
+                    while (!process.StandardError.EndOfStream)
+                        log(process.StandardError.ReadLine());
+                });
+                errorTask.Start();
+
+                if (!Task.WaitAll(new[] {outputTask, errorTask}, getRemainingTimeout()) ||
+                    !process.WaitForExit(getRemainingTimeout()))
+                {
+                    log(String.Format("ERROR: The process ({0}) exceeded the timeout ({1}s); terminating now.", process.Id, timeout / 1000));
+                    process.Kill();
+                    process.Dispose();
+                    return int.MaxValue;
+                }
+
+                var exitCode = process.ExitCode;
+                process.Dispose();
+                return exitCode;
+            }
+            finally
+            {
+                stopwatch.Stop();
+            }
         }
     }
 }
