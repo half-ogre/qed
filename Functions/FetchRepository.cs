@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace qed
 {
     public static partial class Functions
     {
-        public static Task<bool> FetchRepository(
+        public static bool FetchRepository(
             Build build,
             string repositoryDirectory,
             Action<string> log)
@@ -20,7 +19,7 @@ namespace qed
                 RunProcess);
         }
 
-        internal static Task<bool> FetchRepository(
+        internal static bool FetchRepository(
             Build build,
             string repositoryDirectory,
             Action<string> log,

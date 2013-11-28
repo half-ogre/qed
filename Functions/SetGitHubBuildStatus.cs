@@ -1,27 +1,26 @@
 ﻿using System;
-using System.Threading.Tasks;
-using Octokit;
+using Octokit   ;
 
 namespace qed
 {
     public static partial class Functions
     {
-        public static Task SetGitHubBuildStatus(
+        public static void SetGitHubBuildStatus(
             Build build,
             CommitState state)
         {
-            return SetGitHubBuildStatus(
+            SetGitHubBuildStatus(
                 build,
                 state,
                 GetBuildConfiguration,
                 GetBuildDescription,
                 GetHost,
-                async (token, owner, name, sha, commitState, targetUrl, description) =>
+                (token, owner, name, sha, commitState, targetUrl, description) =>
                 {
                     var gitHubClient = GetGitHubClient();
                     gitHubClient.Credentials = new Credentials(token);
 
-                    await gitHubClient.Repository.CommitStatus.Create(
+                    gitHubClient.Repository.CommitStatus.Create(
                         owner,
                         name,
                         sha,
@@ -30,17 +29,17 @@ namespace qed
                             State = commitState,
                             TargetUrl = targetUrl,
                             Description = description
-                        });
+                        }).Wait();
                 });
         }
 
-        internal static async Task SetGitHubBuildStatus(
+        internal static void SetGitHubBuildStatus(
             Build build,
             CommitState state,
             Func<string, string, BuildConfiguration> getBuildConfiguration,
             Func<Build, string> getBuildDescription,
-            Func<Task<string>> getHost,
-            Func<string, string, string, string, CommitState, Uri, string, Task> createGitHubCommitStatus)
+            Func<string> getHost,
+            Action<string, string, string, string, CommitState, Uri, string> createGitHubCommitStatus)
         {
             var buildConfiguration = getBuildConfiguration(
                 build.RepositoryOwner,
@@ -51,12 +50,12 @@ namespace qed
 
             var targetUrl = new Uri(String.Format(
                 "http://{0}/{1}/{2}/builds/{3}",
-                await getHost(),
+                getHost(),
                 build.RepositoryOwner,
                 build.RepositoryName,
                 build.Id));
 
-            await createGitHubCommitStatus(
+            createGitHubCommitStatus(
                 buildConfiguration.Token,
                 build.RepositoryOwner,
                 build.RepositoryName,

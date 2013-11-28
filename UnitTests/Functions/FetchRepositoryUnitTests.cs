@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 using Xunit;
 using fn = qed.Functions;
 
@@ -68,11 +67,11 @@ namespace qed.UnitTests
         }
 
         [Fact]
-        public async Task returns_true_when_the_exit_code_from_running_the_process_is_zero()
+        public void returns_true_when_the_exit_code_from_running_the_process_is_zero()
         {
             _fakeRunProcess = (process, log) => 0;
 
-            var actual = await fn.FetchRepository(
+            var actual = fn.FetchRepository(
                 _fakeBuild,
                 "a-repository-directory",
                 _fakeLog,
@@ -84,11 +83,11 @@ namespace qed.UnitTests
         }
 
         [Fact]
-        public async Task returns_false_when_the_exit_code_from_running_the_process_is_not_zero()
+        public void returns_false_when_the_exit_code_from_running_the_process_is_not_zero()
         {
             _fakeRunProcess = (process, log) => 42;
 
-            var actual = await fn.FetchRepository(
+            var actual = fn.FetchRepository(
                 _fakeBuild, 
                 "a-repository-directory", 
                 _fakeLog, 

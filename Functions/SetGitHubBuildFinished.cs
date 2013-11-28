@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Octokit;
 
 namespace qed
 {
     public static partial class Functions
     {
-        public static async Task<bool> SetGitHubBuildFinished(
+        public static bool SetGitHubBuildFinished(
             Build build,
             bool succeeded,
             Action<string> logBuildMessage)
@@ -19,9 +18,9 @@ namespace qed
 
             logBuildMessage(String.Format("STEP: Updating GitHub build status to {0}.", stateName));
 
-            return await RunStep(async () =>
+            return RunStep(() =>
             {
-                await SetGitHubBuildStatus(build, state);
+                SetGitHubBuildStatus(build, state);
                 return true;
             }, logBuildMessage);
         }

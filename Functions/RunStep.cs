@@ -1,26 +1,18 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace qed
 {
     public static partial class Functions
     {
-        public static Task<bool> RunStep(
+        public static bool RunStep(
             Func<bool> step,
-            Action<string> logBuildMessage)
-        {
-            return RunStep(() => Task.FromResult(step()), logBuildMessage);
-        }
-
-        public static async Task<bool> RunStep(
-            Func<Task<bool>> step,
             Action<string> logBuildMessage)
         {
             var success = false;
 
             try
             {
-                success = await step();
+                success = step();
             }
             catch (Exception ex)
             {

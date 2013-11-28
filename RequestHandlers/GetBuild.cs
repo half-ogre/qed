@@ -7,7 +7,7 @@ namespace qed
 {
     public static partial class Handlers
     {
-        public static async Task GetBuild(
+        public static Task GetBuild(
             IDictionary<string, object> environment,
             dynamic @params,
             Func<IDictionary<string, object>, Task> next)
@@ -20,7 +20,7 @@ namespace qed
             if (buildConfiguration == null)
             {
                 environment.SetStatusCode(400);
-                return;
+                return environment.GetCompleted();
             }
 
             var build = fn.GetBuild(id);
@@ -29,7 +29,7 @@ namespace qed
             if (build.Revision != null)
                 sha = build.Revision.Substring(0, 7);
             
-            await environment.Render("build", new
+            return environment.Render("build", new
             {
                 id = build.Id,
                 description = fn.GetBuildDescription(build, includeRefDescription: true),

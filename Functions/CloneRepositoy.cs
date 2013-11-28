@@ -1,12 +1,11 @@
 ﻿using System;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace qed
 {
     public static partial class Functions
     {
-        public static Task<bool> CloneRepository(
+        public static bool CloneRepository(
             BuildConfiguration buildConfiguration,
             Build build,
             string repositoryOwnerDirectory,

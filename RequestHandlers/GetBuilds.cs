@@ -8,7 +8,7 @@ namespace qed
 {
     public static partial class Handlers
     {
-        public static async Task GetBuilds(
+        public static Task GetBuilds(
             IDictionary<string, object> environment,
             dynamic @params,
             Func<IDictionary<string, object>, Task> next)
@@ -20,7 +20,7 @@ namespace qed
             if (buildConfiguration == null)
             {
                 environment.SetStatusCode(400);
-                return;
+                return environment.GetCompleted();
             }
 
             var responseModel = new
@@ -30,7 +30,7 @@ namespace qed
                 builds = CreateBuildsResponseModel(buildConfiguration)
             };
 
-            await environment.Render(
+            return environment.Render(
                 "builds",
                 responseModel);
         }

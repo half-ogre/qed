@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Threading;
 using Nowin;
 using fn = qed.Functions;
-using Task = System.Threading.Tasks.Task;
 
 namespace qed
 {
@@ -10,7 +10,7 @@ namespace qed
         static void Main()
         {
             var appBuilder = new OwinBuilder();
-            
+
             fn.ConfigureBuilder(appBuilder);
 
             var serverBuilder = ServerBuilder
@@ -39,8 +39,7 @@ namespace qed
                 try
                 {
                     // TODO: Do this with cancellation and timeout
-                    fn.BuildNext(Console.WriteLine)
-                        .Wait();
+                    fn.BuildNext(Console.WriteLine);
                 }
                 catch (AggregateException agEx)
                 {
@@ -54,8 +53,7 @@ namespace qed
                 finally
                 {
                     // TODO: Surely there is a better way to idle?
-                    Task.Delay(250)
-                        .Wait();
+                    Thread.Sleep(250);
                 }
             }
         }

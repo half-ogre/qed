@@ -8,24 +8,24 @@ namespace qed
 {
     public static partial class Handlers
     {
-        public static async Task PostForceEvent(
+        public static Task PostForceEvent(
             IDictionary<string, object> environment,
             Func<IDictionary<string, object>, Task> next)
         {
-            var fail = new Func<int, string, Task>(async (statusCode, message) =>
+            var fail = new Func<int, string, Task>((statusCode, message) =>
             {
                 environment.SetStatusCode(statusCode);
-                await environment.WriteAsync(message);
+                return environment.WriteAsync(message);
             });
 
-            var form = await environment.ReadFormAsync();
+            var form = environment.ReadFormAsync();
 
             var payload = form["payload"];
 
             if (payload == null || payload.Count == 0)
             {
-                await fail(400, "Missing payload.");
-                return;
+                fail(400, "Missing payload.");
+                return environment.GetCompleted();
             }
 
             var @event = payload[0];
@@ -37,8 +37,8 @@ namespace qed
             var buildConfiguration = fn.GetBuildConfiguration(forceEvent.Repository.Owner.Name, forceEvent.Repository.Name);
             if (buildConfiguration == null)
             {
-                await fail(422, "No build configuraion matches the identified build.");
-                return;
+                fail(422, "No build configuraion matches the identified build.");
+                return environment.GetCompleted();
             }
 
             var newBuild = fn.CreateBuild(
@@ -59,13 +59,13 @@ namespace qed
 
             var absoluteLocation = String.Format(
                 "http://{0}{1}",
-                await fn.GetHost(),
+                fn.GetHost(),
                 location);
 
             environment.SetStatusCode(201);
             var responseHeaders = environment.GetResponseHeaders();
             responseHeaders.Add("Location", new [] { absoluteLocation });
-            await environment.Render("queued", new { id = newBuild.Id, location});
+            return environment.Render("queued", new { id = newBuild.Id, location});
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Threading.Tasks;
 using Octokit;
 
 namespace qed
 {
     public static partial class Functions
     {
-        public static async Task<string> GetHost()
+        public static string GetHost()
         {
             var host = GetConfiguration<string>(Constants.Configuration.HostKey);
             if (host != null)
@@ -14,7 +13,7 @@ namespace qed
 
             var github = GetGitHubClient();
 
-            var response = (await github.Connection.GetHtml(new Uri("http://ifconfig.me/ip", UriKind.Absolute)));
+            var response = github.Connection.GetHtml(new Uri("http://ifconfig.me/ip", UriKind.Absolute)).Result;
             host = response.Body.TrimEnd('\r', '\n');
 
             SetConfiguration(Constants.Configuration.HostKey, host);

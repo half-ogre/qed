@@ -8,7 +8,7 @@ namespace qed
 {
     public static partial class Handlers
     {
-        public static async Task PostBuild(
+        public static Task PostBuild(
             IDictionary<string, object> environment,
             dynamic @params,
             Func<IDictionary<string, object>, Task> next)
@@ -20,10 +20,10 @@ namespace qed
             if (buildConfiguration == null)
             {
                 environment.SetStatusCode(400);
-                return;
+                return environment.GetCompleted();
             }
 
-            var fail = new Func<int, string, Task>(async (statusCode, errorMessage) =>
+            var fail = new Func<int, string, Task>((statusCode, errorMessage) =>
             {
                 environment.SetStatusCode(statusCode);
 
@@ -35,19 +35,19 @@ namespace qed
                     errorMessage
                 };
 
-                await environment.Render(
+                return environment.Render(
                     "builds",
                     responseModel);
             });
 
-            var form = await environment.ReadFormAsync();
+            var form = environment.ReadFormAsync();
 
             var branchOrPr = form["branch-or-pr"].FirstOrDefault();
 
             if (String.IsNullOrEmpty(branchOrPr))
             {
-                await fail(400, "A branch or pull request number is required.");
-                return;
+                fail(400, "A branch or pull request number is required.");
+                return environment.GetCompleted();
             }
 
             string @ref;
@@ -74,13 +74,13 @@ namespace qed
 
             var absoluteLocation = String.Format(
                 "http://{0}{1}",
-                await fn.GetHost(),
+                fn.GetHost(),
                 location);
 
             environment.SetStatusCode(201);
             var responseHeaders = environment.GetResponseHeaders();
             responseHeaders.Add("Location", new [] { absoluteLocation });
-            await environment.Render("queued", new { id = newBuild.Id, location});
+            return environment.Render("queued", new { id = newBuild.Id, location});
         }
     }
 }

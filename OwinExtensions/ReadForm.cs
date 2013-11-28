@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading.Tasks;
 
 namespace qed
 {
@@ -56,7 +55,7 @@ namespace qed
             return form;
         }
 
-        public static async Task<IDictionary<string, List<string>>> ReadFormAsync(this IDictionary<string, object> environment)
+        public static IDictionary<string, List<string>> ReadFormAsync(this IDictionary<string, object> environment)
         {
             var form = environment.Get<IDictionary<string, List<string>>>(Constants.OwinExtensions.RequestFormKey);
 
@@ -64,8 +63,9 @@ namespace qed
                 return form;
 
             string formText;
-            using (var streamReader = new StreamReader(environment.GetResponseBody()))
-                formText = await streamReader.ReadToEndAsync();
+            var stream = environment.GetRequestBody();
+            using (var streamReader = new StreamReader(stream))
+                formText = streamReader.ReadToEnd();
 
             form = ParseForm(formText);
 

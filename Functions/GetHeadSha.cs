@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace qed
 {
     public static partial class Functions
     {
-        public static Task<bool> GetHeadSha(
+        public static bool GetHeadSha(
             Build build,
             string repositoryDirectory,
             Action<string> log)

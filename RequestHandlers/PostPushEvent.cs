@@ -9,22 +9,22 @@ namespace qed
 {
     public static partial class Handlers
     {
-        public static async Task PostPushEvent(
+        public static Task PostPushEvent(
             IDictionary<string, object> environment,
             Func<IDictionary<string, object>, Task> next)
         {
-            var fail = new Func<int, string, Task>(async (statusCode, message) =>
+            var fail = new Func<int, string, Task>((statusCode, message) =>
             {
                 environment.SetStatusCode(statusCode);
-                await environment.WriteAsync(message);
+                return environment.WriteAsync(message);
             });
 
             var headers = environment.GetRequestHeaders();
 
             if (!headers.ContainsKey("X-GitHub-Event"))
             {
-                await fail(400, "Missing X-GitHub-Event header.");
-                return;
+                fail(400, "Missing X-GitHub-Event header.");
+                return environment.GetCompleted();
             }
 
             var eventTypes = headers["X-GitHub-Event"];
@@ -34,19 +34,19 @@ namespace qed
 
                 if (eventType == null || !eventType.Equals("push", StringComparison.OrdinalIgnoreCase))
                 {
-                    await fail(422, String.Concat("Unexpected X-GitHub-Event: ", eventType, "."));
-                    return;
+                    fail(422, String.Concat("Unexpected X-GitHub-Event: ", eventType, "."));
+                    return environment.GetCompleted();
                 }
             }
 
-            var form = await environment.ReadFormAsync();
+            var form = environment.ReadFormAsync();
 
             var payload = form["payload"];
 
             if (payload == null || payload.Count == 0)
             {
-                await fail(400, "Missing payload.");
-                return;
+                fail(400, "Missing payload.");
+                return environment.GetCompleted();
             }
 
             var @event = payload[0];
@@ -58,7 +58,7 @@ namespace qed
             if (pushEvent.After.StartsWith("0000000"))
             {
                 environment.SetStatusCode(204);
-                return;
+                return environment.GetCompleted();
             }
 
             var buildConfigurations = fn.GetBuildConfigurations();
@@ -70,7 +70,7 @@ namespace qed
             if (buildConfiguration == null)
             {
                 environment.SetStatusCode(204);
-                return;
+                return environment.GetCompleted();
             }
 
             fn.CreateBuild(
@@ -84,6 +84,7 @@ namespace qed
                 @event);
 
             environment.SetStatusCode(204);
+            return environment.GetCompleted();
         }
     }
 }

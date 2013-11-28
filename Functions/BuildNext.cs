@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Threading.Tasks;
 
 namespace qed
 {
     public static partial class Functions
     {
-        public static async Task BuildNext(Action<string> logConsoleMessage)
+        public static void BuildNext(Action<string> logConsoleMessage)
         {
             var build = GetNextQueuedBuild();
 
@@ -43,18 +42,18 @@ namespace qed
             try
             {
                 var succeeded = 
-                    await CloneRepository(buildConfiguration, build, repositoryOwnerDirectory, repositoryDirectory, logBuildMessage) &&
-                    await CleanRepository(repositoryDirectory, logBuildMessage) &&
-                    await FetchRepository(build, repositoryDirectory, logBuildMessage) &&
-                    await GetHeadSha(build, repositoryDirectory, logBuildMessage) &&
-                    await ResetRepository(build, repositoryDirectory, logBuildMessage) &&
-                    await SetGitHubBuildStarted(build, logBuildMessage) &&
-                    await RunBuild(build, repositoryDirectory, logBuildMessage);
+                    CloneRepository(buildConfiguration, build, repositoryOwnerDirectory, repositoryDirectory, logBuildMessage) &&
+                    CleanRepository(repositoryDirectory, logBuildMessage) &&
+                    FetchRepository(build, repositoryDirectory, logBuildMessage) &&
+                    GetHeadSha(build, repositoryDirectory, logBuildMessage) &&
+                    ResetRepository(build, repositoryDirectory, logBuildMessage) &&
+                    SetGitHubBuildStarted(build, logBuildMessage) &&
+                    RunBuild(build, repositoryDirectory, logBuildMessage);
 
                 SetBuildFinished(build, succeeded, DateTimeOffset.UtcNow);
-                
+
                 if (build.Revision != null)
-                    await SetGitHubBuildFinished(build, succeeded, logBuildMessage);
+                    SetGitHubBuildFinished(build, succeeded, logBuildMessage);
             }
             catch (Exception ex)
             {
