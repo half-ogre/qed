@@ -13,6 +13,7 @@
         public static class Owin
         {
             public const string CallCancelledKey = "owin.CallCancelled";
+            public const string RequestBodyKey = "owin.RequestBody";
             public const string RequestHeadersKey = "owin.RequestHeaders";
             public const string RequestMethodKey = "owin.RequestMethod";
             public const string RequestPathKey = "owin.RequestPath";
