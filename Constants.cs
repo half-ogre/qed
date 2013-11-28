@@ -23,6 +23,7 @@
 
         public static class OwinExtensions
         {
+            public const string CompletedKey = "owinextensions.CompletedKey";
             public const string RequestFormKey = "owinextensions.RequestForm";
         }
     }
