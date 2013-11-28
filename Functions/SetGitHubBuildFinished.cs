@@ -27,6 +27,12 @@ namespace qed
                     return true;
                 }
 
+                if (build.Revision != null)
+                {
+                    logBuildMessage("The build has no SHA; skipping.");
+                    return true;
+                }
+
                 SetGitHubBuildStatus(build, state);
                 return true;
             }, logBuildMessage);
