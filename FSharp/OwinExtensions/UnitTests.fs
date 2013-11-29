@@ -1,5 +1,5 @@
-﻿#if DEBUG
-module UnitTests.the_parseForm_function
+﻿module UnitTests.the_parseForm_function
+#if DEBUG
 
 open System
 open System.Linq
