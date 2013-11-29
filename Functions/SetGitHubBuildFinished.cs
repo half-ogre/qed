@@ -27,7 +27,7 @@ namespace qed
                     return true;
                 }
 
-                if (build.Revision != null)
+                if (build.Revision == null)
                 {
                     logBuildMessage("The build has no SHA; skipping.");
                     return true;
