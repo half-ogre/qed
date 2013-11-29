@@ -25,13 +25,7 @@ namespace qed
                     return true;
                 }
 
-                var uriBuilder = new UriBuilder(build.RepositoryUrl)
-                {
-                    UserName = buildConfiguration.Token,
-                    Password = ""
-                };
-
-                var url = uriBuilder.ToString();
+                var url = GetRepositoryUrl(buildConfiguration.Owner, buildConfiguration.Name, buildConfiguration.Token);
 
                 var process = CreateProcess(
                     command: "git.exe",

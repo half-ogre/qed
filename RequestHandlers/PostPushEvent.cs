@@ -79,7 +79,6 @@ namespace qed
                 buildConfiguration.CommandArguments,
                 pushEvent.Repository.Name,
                 pushEvent.Repository.Owner.Name,
-                pushEvent.Repository.Url,
                 pushEvent.Ref,
                 pushEvent.After,
                 "push",

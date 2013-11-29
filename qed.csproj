@@ -34,6 +34,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LibGit2Sharp">
+      <HintPath>packages\LibGit2Sharp.0.14.1.0\lib\net35\LibGit2Sharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Data.Edm, Version=5.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SolutionDir)packages\Microsoft.Data.Edm.5.2.0\lib\net40\Microsoft.Data.Edm.dll</HintPath>
@@ -97,6 +100,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\GetRepositoryUrl.cs" />
+    <Compile Include="Functions\GetHeadSha.cs" />
     <Compile Include="Functions\To.cs" />
     <Compile Include="Functions\Until.cs" />
     <Compile Include="Functions\Since.cs" />
@@ -127,6 +132,7 @@
     <Compile Include="Functions\SetConfiguration.cs" />
     <Compile Include="OwinMiddleware\ContentType.cs" />
     <Compile Include="RavenCommands\AppendBuidOutput.cs" />
+    <Compile Include="RavenCommands\SetBuildRevision.cs" />
     <Compile Include="RavenCommands\SetBuildFinished.cs" />
     <Compile Include="RavenCommands\SetBuildStarted.cs" />
     <Compile Include="RavenCommands\CreateBuild.cs" />
@@ -145,11 +151,13 @@
     <Compile Include="RavenQueries\GetLastFinishedBuild.cs" />
     <Compile Include="RavenQueries\GetBuilds.cs" />
     <Compile Include="RavenQueries\GetBuild.cs" />
-    <Compile Include="RequestHandlers\PostRebuildEvent.cs" />
+    <Compile Include="RequestHandlers\PostBuild.cs" />
+    <Compile Include="RequestHandlers\PostForceEvent.cs" />
     <Compile Include="RequestHandlers\PostPullRequestEvent.cs" />
     <Compile Include="RequestHandlers\GetBuild.cs" />
     <Compile Include="RequestHandlers\GetBuilds.cs" />
     <Compile Include="RequestModels\Branch.cs" />
+    <Compile Include="RequestModels\ForceEvent.cs" />
     <Compile Include="RequestModels\PullRequest.cs" />
     <Compile Include="RequestModels\PullRequestEvent.cs" />
     <Compile Include="RequestModels\Owner.cs" />
@@ -180,7 +188,7 @@
     <Content Include="MustacheTemplates\build.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="MustacheTemplates\rebuild.mustache">
+    <Content Include="MustacheTemplates\queued.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
@@ -196,6 +204,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <PropertyGroup>
+    <PostBuildEvent>
+if not exist "$(TargetDir)NativeBinaries" md "$(TargetDir)NativeBinaries"
+if not exist "$(TargetDir)NativeBinaries\x86" md "$(TargetDir)NativeBinaries\x86"
+xcopy /s /y "$(SolutionDir)packages\LibGit2Sharp.0.14.1.0\lib\net35\NativeBinaries\x86\*.*" "$(TargetDir)NativeBinaries\x86"
+if not exist "$(TargetDir)NativeBinaries\amd64" md "$(TargetDir)NativeBinaries\amd64"
+xcopy /s /y "$(SolutionDir)packages\LibGit2Sharp.0.14.1.0\lib\net35\NativeBinaries\amd64\*.*" "$(TargetDir)NativeBinaries\amd64"</PostBuildEvent>
+  </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

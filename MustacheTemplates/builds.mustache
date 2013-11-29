@@ -1,4 +1,14 @@
 ﻿  <h1><a href="/">Home</a> &raquo; {{owner}}/{{name}}</h1>
+  <form action="/{{owner}}/{{name}}/builds" method="POST">
+    <div class="form-group">
+      <label for="branch-or-pr">Enter a branch (e.g. <i>master</i>) or a pull request (e.g. <i>#42</i>) to build:</label>
+      <input name="branch-or-pr" type="text" />
+      {{#errorMessage}}
+      <label for="branch-or-pr" class="error">{{errorMessage}}</label>
+      {{/errorMessage}}
+      <button type="submit">Build</button>
+    </div>
+  </form>
   <ul>
     {{#builds}}
 	  <li>

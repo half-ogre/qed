@@ -15,7 +15,6 @@ namespace qed
         public string Ref { get; set; }
         public string RepositoryName { get; set; }
         public string RepositoryOwner { get; set; }
-        public string RepositoryUrl { get; set; }
         public string Revision { get; set; }    
         public DateTimeOffset? Started { get; set; }
         public bool? Succeeded { get; set; }

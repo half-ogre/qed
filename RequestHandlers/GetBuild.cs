@@ -25,6 +25,10 @@ namespace qed
             }
 
             var build = fn.GetBuild(id);
+
+            var sha = (string)null;
+            if (build.Revision != null)
+                sha = build.Revision.Substring(0, 7);
             
             await environment.Render("build", new
             {
@@ -32,7 +36,10 @@ namespace qed
                 description = fn.GetBuildDescription(build, includeRefDescription: true),
                 name = build.RepositoryName,
                 owner = build.RepositoryOwner,
-                sha = build.Revision.Substring(0, 7),
+                @ref = build.Ref,
+                refDescription = fn.GetRefDescription(build),
+                revision = build.Revision,
+                sha,
                 failed = !build.Succeeded,
                 output = fn.Redact(build.Ouput),
                 status = GetBuildStatus(build)
