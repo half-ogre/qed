@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using fn = qed.Functions;
+using OwinExtensions;
 
 namespace qed
 {
