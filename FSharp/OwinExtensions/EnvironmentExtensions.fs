@@ -90,7 +90,7 @@ type EnvironmentExt() =
     static member ReadForm environment : Form =
         let form = EnvironmentExt.Get<Form>(environment, RequestFormKey)
 
-        let createForm =
+        let createForm() =
             let stream = EnvironmentExt.GetResponseBody(environment)
             use streamReader = new StreamReader(stream)
             let formText = streamReader.ReadToEnd()
@@ -99,7 +99,7 @@ type EnvironmentExt() =
             form
 
         match form with
-            | null -> createForm 
+            | null -> createForm()
             | _ -> form
 
     [<Extension>]

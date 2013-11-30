@@ -151,7 +151,7 @@ namespace qed.UnitTests
         }
 
         [Theory]
-        [InlineData(0)]
+        [InlineData(0)]t
         [InlineData(42)]
         public void logs_a_blank_line_at_the_end(int exitCode)
         {
