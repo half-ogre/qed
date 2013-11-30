@@ -50,6 +50,19 @@ type EnvironmentExt() =
         EnvironmentExt.Get<CancellationToken> (environment, CallCancelledKey)
 
     [<Extension>]
+    static member GetCompleted (environment) =
+        let completedTask = EnvironmentExt.Get<Task>(environment, CompletedKey)
+
+        let createCompletedTask =
+            let tcs = new TaskCompletionSource<Object>()
+            tcs.TrySetCanceled() |> ignore
+            tcs.Task :> Task
+
+        match completedTask with
+            | null -> createCompletedTask
+            | _ -> completedTask
+
+    [<Extension>]
     static member GetMethod (environment) =
         EnvironmentExt.Get<string> (environment, RequestMethodKey)
 

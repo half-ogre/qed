@@ -4,6 +4,9 @@
     let internal CallCancelledKey = "owin.CallCancelled"
 
     [<Literal>]
+    let CompletedKey = "owinextensions.Completed"
+
+    [<Literal>]
     let internal RequestBodyKey = "owin.RequestBody"
    
     [<Literal>]
