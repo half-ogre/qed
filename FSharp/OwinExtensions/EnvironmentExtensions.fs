@@ -58,6 +58,10 @@ type EnvironmentExt() =
         EnvironmentExt.Get<string> (environment, RequestPathKey)
 
     [<Extension>]
+    static member GetRequestBody (environment) =
+        EnvironmentExt.Get<Stream> (environment, RequestBodyKey)
+
+    [<Extension>]
     static member GetRequestHeaders (environment) = 
         EnvironmentExt.Get<Headers> (environment, RequestHeadersKey)
 

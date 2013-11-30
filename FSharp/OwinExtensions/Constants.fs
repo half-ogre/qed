@@ -2,6 +2,9 @@
 
     [<Literal>]
     let internal CallCancelledKey = "owin.CallCancelled"
+
+    [<Literal>]
+    let internal RequestBodyKey = "owin.RequestBody"
    
     [<Literal>]
     let internal RequestHeadersKey = "owin.RequestHeaders"
