@@ -11,14 +11,17 @@ namespace qed
         {
             log("STEP: Reseting repository.");
 
-            return RunStep(() =>
+            Func<bool> step = () =>
             {
-                var process = CreateProcess(
+                using (var process = CreateProcess(
                     "git.exe",
-                    String.Concat("reset --hard ", build.Revision), repositoryDirectory);
+                    String.Concat("reset --hard ", build.Revision), repositoryDirectory))
+                {
+                    return RunProcess(process, log) == 0;
+                }
+            };
 
-                return RunProcess(process, log) == 0;
-            }, log);
+            return RunStep(step, log);
         }
     }
 }

@@ -10,15 +10,18 @@ namespace qed
         {
             log("STEP: Cleaning repository.");
 
-            return RunStep(() =>
+            Func<bool> step = () =>
             {
-                var process = CreateProcess(
+                using (var process = CreateProcess(
                     "git.exe",
                     "clean -xdf",
-                    repositoryDirectory);
+                    repositoryDirectory))
+                {
+                    return RunProcess(process, log) == 0;
+                }
+            };
 
-                return RunProcess(process, log) == 0;
-            }, log);
+            return RunStep(step, log);
         }
     }
 }

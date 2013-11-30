@@ -14,7 +14,7 @@ namespace qed
         {
             log("STEP: Cloning repository.");
 
-            return RunStep(() =>
+            Func<bool> step = () =>
             {
                 log("Checking whether repository has already been cloned.");
 
@@ -26,13 +26,16 @@ namespace qed
 
                 var url = GetRepositoryUrl(buildConfiguration.Owner, buildConfiguration.Name, buildConfiguration.Token);
 
-                var process = CreateProcess(
+                using (var process = CreateProcess(
                     command: "git.exe",
                     arguments: String.Format("clone --recursive {0} {1}", url, repositoryDirectory),
-                    workingDirectory: repositoryOwnerDirectory);
+                    workingDirectory: repositoryOwnerDirectory))
+                {
+                    return RunProcess(process, log) == 0;
+                }
+            };
 
-                return RunProcess(process, log) == 0;
-            }, log);
+            return RunStep(step, log);
         }
     }
 }

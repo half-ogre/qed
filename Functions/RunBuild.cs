@@ -11,15 +11,18 @@ namespace qed
         {
             log("STEP: Running build command.");
 
-            return RunStep(() =>
+            Func<bool> step = () =>
             {
-                var process = CreateProcess(
+                using (var process = CreateProcess(
                     build.Command,
                     build.CommandArguments,
-                    repositoryDirectory);
+                    repositoryDirectory))
+                {
+                    return RunProcess(process, log) == 0;
+                }
+            };
 
-                return RunProcess(process, log) == 0;
-            }, log);
+            return RunStep(step, log);
         }
     }
 }

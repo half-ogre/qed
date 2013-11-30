@@ -57,7 +57,6 @@ namespace qed
                 }
 
                 var exitCode = process.ExitCode;
-                process.Dispose();
                 return exitCode;
             }
             finally

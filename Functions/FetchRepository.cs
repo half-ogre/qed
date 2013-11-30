@@ -29,14 +29,17 @@ namespace qed
         {
             log("STEP: Fetching repository.");
 
-            return RunStep(() =>
+            Func<bool> step = () =>
             {
-                var process = createProcess(
+                using (var process = createProcess(
                     "git.exe",
-                    String.Concat("fetch origin ", createFetchRefspec(build.Ref)), repositoryDirectory);
+                    String.Concat("fetch origin ", createFetchRefspec(build.Ref)), repositoryDirectory))
+                {
+                    return runProcess(process, log) == 0;
+                }
+            };
 
-                return runProcess(process, log) == 0;
-            }, log);
+            return RunStep(step, log);
         }
     }
 }
