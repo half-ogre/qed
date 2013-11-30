@@ -14,9 +14,15 @@ namespace qed
 
             var baseDirectory = GetBaseDirectory();
             var buildConfigurationsPath = Path.Combine(baseDirectory, "build.config");
-
             if (!File.Exists(buildConfigurationsPath))
-                return new BuildConfiguration[0];
+            {
+                var rootBuildConfigurationsPath = Path.Combine(baseDirectory, @"..\..\", "Build.config");
+                
+                if (File.Exists(rootBuildConfigurationsPath))
+                    buildConfigurationsPath = rootBuildConfigurationsPath;
+                else
+                    return new BuildConfiguration[0];
+            }
 
             var json = File.ReadAllText(buildConfigurationsPath);
             
@@ -27,4 +33,5 @@ namespace qed
             return buildConfigurations;
         }
     }
+
 }
