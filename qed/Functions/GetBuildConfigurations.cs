@@ -16,7 +16,7 @@ namespace qed
             var buildConfigurationsPath = Path.Combine(baseDirectory, "build.config");
             if (!File.Exists(buildConfigurationsPath))
             {
-                var rootBuildConfigurationsPath = Path.Combine(baseDirectory, @"..\..\", "Build.config");
+                var rootBuildConfigurationsPath = Path.Combine(baseDirectory, @"..\..\..\", "Build.config");
                 
                 if (File.Exists(rootBuildConfigurationsPath))
                     buildConfigurationsPath = rootBuildConfigurationsPath;
