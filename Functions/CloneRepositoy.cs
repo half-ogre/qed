@@ -31,7 +31,7 @@ namespace qed
                     arguments: String.Format("clone --recursive {0} {1}", url, repositoryDirectory),
                     workingDirectory: repositoryOwnerDirectory);
 
-                return RunProcess(process, process.Dispose, log) == 0;
+                return RunProcess(process, log) == 0;
             }, log);
         }
     }

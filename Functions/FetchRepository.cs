@@ -25,7 +25,7 @@ namespace qed
             Action<string> log,
             Func<string, string, string, Process> createProcess,
             Func<string, string> createFetchRefspec,
-            Func<Process, Action, Action<string>, int> runProcess)
+            Func<Process, Action<string>, int> runProcess)
         {
             log("STEP: Fetching repository.");
 
@@ -35,7 +35,7 @@ namespace qed
                     "git.exe",
                     String.Concat("fetch origin ", createFetchRefspec(build.Ref)), repositoryDirectory);
 
-                return runProcess(process, process.Dispose, log) == 0;
+                return runProcess(process, log) == 0;
             }, log);
         }
     }

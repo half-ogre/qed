@@ -17,7 +17,7 @@ namespace qed
                     "clean -xdf",
                     repositoryDirectory);
 
-                return RunProcess(process, process.Dispose, log) == 0;
+                return RunProcess(process, log) == 0;
             }, log);
         }
     }
