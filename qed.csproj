@@ -143,7 +143,6 @@
     <Compile Include="Functions\ConfigureBuilder.cs" />
     <Compile Include="Functions\CreateRavenStore.cs" />
     <Compile Include="Functions\OpenRavenSession.cs" />
-    <Compile Include="OwinExtensions\ReadForm.cs" />
     <Compile Include="OwinMiddleware\Dispatcher.cs" />
     <Compile Include="OwinBuilder.cs" />
     <Compile Include="OwinMiddleware\Mustache.cs" />

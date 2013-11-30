@@ -41,7 +41,7 @@ namespace qed
                     responseModel);
             });
 
-            var form = environment.ReadFormAsync();
+            var form = environment.ReadForm();
 
             var branchOrPr = form["branch-or-pr"].FirstOrDefault();
 

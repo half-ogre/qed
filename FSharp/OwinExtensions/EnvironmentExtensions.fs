@@ -70,23 +70,20 @@ type EnvironmentExt() =
         EnvironmentExt.Get<Headers> (environment, ResponseHeadersKey)
 
     [<Extension>]
-    static member ReadFormAsync (environment) : Task<Form> =
-
-        let form = EnvironmentExt.Get<Form> (environment, RequestFormKey)
+    static member ReadForm environment : Form =
+        let form = EnvironmentExt.Get<Form>(environment, RequestFormKey)
 
         let createForm =
-            async {
-                use streamReader = new StreamReader (EnvironmentExt.GetResponseBody environment) 
-                let! formText = Async.AwaitTask(streamReader.ReadToEndAsync())
-                let form = helpers.parseForm formText
-                environment.[RequestFormKey] <- form
-                return form
-                }
-            |> Async.StartAsTask // TODO: is this spawning unnecessary threads? 
+            let stream = EnvironmentExt.GetResponseBody(environment)
+            use streamReader = new StreamReader(stream)
+            let formText = streamReader.ReadToEnd()
+            let form = helpers.parseForm(formText)
+            environment.[RequestFormKey] <- form
+            form
 
         match form with
             | null -> createForm 
-            | _ -> Task.FromResult form
+            | _ -> form
 
     [<Extension>]
     static member WriteAsync (environment, buffer, offset, count, cancel:CancellationToken) =

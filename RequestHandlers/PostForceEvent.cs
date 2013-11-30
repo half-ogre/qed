@@ -19,7 +19,7 @@ namespace qed
                 return environment.WriteAsync(message);
             });
 
-            var form = environment.ReadFormAsync();
+            var form = environment.ReadForm();
 
             var payload = form["payload"];
 

@@ -40,7 +40,7 @@ namespace qed
                 }
             }
 
-            var form = environment.ReadFormAsync();
+            var form = environment.ReadForm();
 
             var payload = form["payload"];
 
