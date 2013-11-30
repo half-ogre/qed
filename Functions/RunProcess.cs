@@ -8,6 +8,7 @@ namespace qed
     {
         public static int RunProcess(
             Process process, 
+            Action onFinished,
             Action<string> log)
         {
             const int timeout = 5 /* minutes */ * 60 /* seconds */ * 1000 /* milliseconds */;
@@ -57,12 +58,11 @@ namespace qed
                 }
 
                 var exitCode = process.ExitCode;
-                process.Dispose();
                 return exitCode;
             }
             finally
             {
-                stopwatch.Stop();
+                onFinished();
             }
         }
     }

@@ -13,7 +13,7 @@ namespace qed.UnitTests
         Func<string, string, string, Process> _fakeCreateProcess = (command, arguments, workingDirectory) => new Process();
         Func<string, string> _fakeCreateFetchRefspec = @ref => "a-refspec";
         Action<string> _fakeLog = message => { };
-        Func<Process, Action<string>, int> _fakeRunProcess = (process, log) => 0;
+        Func<Process, Action, Action<string>, int> _fakeRunProcess = (process, onFinished, log) => 0;
             
         [Fact]
         public void creates_a_git_fetch_process()
@@ -49,7 +49,7 @@ namespace qed.UnitTests
             Process actualProcess = null;
             var expectedProcess = new Process();
             _fakeCreateProcess = (command, arguments, workingDirectory) => expectedProcess;
-            _fakeRunProcess = (process, log) =>
+            _fakeRunProcess = (process, onFinished, log) =>
             {
                 actualProcess = process;
                 return 0;
@@ -69,7 +69,7 @@ namespace qed.UnitTests
         [Fact]
         public void returns_true_when_the_exit_code_from_running_the_process_is_zero()
         {
-            _fakeRunProcess = (process, log) => 0;
+            _fakeRunProcess = (process, onFinished, log) => 0;
 
             var actual = fn.FetchRepository(
                 _fakeBuild,
@@ -85,7 +85,7 @@ namespace qed.UnitTests
         [Fact]
         public void returns_false_when_the_exit_code_from_running_the_process_is_not_zero()
         {
-            _fakeRunProcess = (process, log) => 42;
+            _fakeRunProcess = (process, onFinished, log) => 42;
 
             var actual = fn.FetchRepository(
                 _fakeBuild, 
@@ -120,7 +120,7 @@ namespace qed.UnitTests
         {
             var actualLog = new List<string>();
             _fakeLog = actualLog.Add;
-            _fakeRunProcess = (process, log) => 42;
+            _fakeRunProcess = (process, onFinished, log) => 42;
 
             fn.FetchRepository(
                 _fakeBuild,
@@ -157,7 +157,7 @@ namespace qed.UnitTests
         {
             var actualLog = new List<string>();
             _fakeLog = actualLog.Add;
-            _fakeRunProcess = (process, log) => exitCode;
+            _fakeRunProcess = (process, onFinished, log) => exitCode;
 
             fn.FetchRepository(
                 _fakeBuild,

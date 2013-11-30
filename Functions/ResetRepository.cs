@@ -17,7 +17,7 @@ namespace qed
                     "git.exe",
                     String.Concat("reset --hard ", build.Revision), repositoryDirectory);
 
-                return RunProcess(process, log) == 0;
+                return RunProcess(process, process.Dispose, log) == 0;
             }, log);
         }
     }
