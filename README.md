@@ -44,8 +44,6 @@ QED requires a JSON file named `build.config` in its working directory. The form
 
 Add a [post-receive hook](https://help.github.com/articles/post-receive-hooks) with the event type `push` (the default) and a URL of `http://your-host/events/push`.
 
-Add another [post-receive hook](https://help.github.com/articles/post-receive-hooks) with the event type `pull_request` and a URL of `http://your-host/events/pull-request`. Note that you'll have to [do this via the API](http://blog.half-ogre.com/posts/software/create-pr-hook-for-qed/), as you can't change the event type though github.com. (Eventually, qed will do this for you.)
-
 ## Testing Post-Receive Hooks
 
 If you are adding a new feature or fixing a QED bug, you might need to fake a post-receive hook to start a build locally. Here's a PowerShell snippet to fake a push event:
@@ -64,28 +62,4 @@ $pushPayload = 'payload='+[System.Uri]::EscapeDataString('{
 }')
 
 Invoke-WebRequest -Headers @{"X-GitHub-Event"="push"} -Method Post -Body $pushPayload http://localhost:1754/events/push
-```
-
-And to fake a `pull_request` event:
-
-```
-$prPayload = 'payload='+[System.Uri]::EscapeDataString('{
-  "action": "{state}",
-  "number": {pr-number},
-  "pull_request": {
-    "head": {
-      "ref": "{pr-branch-name}",
-      "sha": "{pr-sha}"
-    }
-  },
-  "repository": { 
-    "name": "{repository-name}", 
-    "owner": {
-      "login": "{repository-owner}"
-    },
-    "html_url": "https://github.com/{repository-owner}/{repository-name}"
-  }
-}')
-
-Invoke-WebRequest -Headers @{"X-GitHub-Event"="pull_request"} -Method Post -Body $prPayload http://localhost:1754/events/pull-request
 ```

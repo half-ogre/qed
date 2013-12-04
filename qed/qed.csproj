@@ -153,13 +153,10 @@
     <Compile Include="RavenQueries\GetBuild.cs" />
     <Compile Include="RequestHandlers\PostBuild.cs" />
     <Compile Include="RequestHandlers\PostForceEvent.cs" />
-    <Compile Include="RequestHandlers\PostPullRequestEvent.cs" />
     <Compile Include="RequestHandlers\GetBuild.cs" />
     <Compile Include="RequestHandlers\GetBuilds.cs" />
     <Compile Include="RequestModels\Branch.cs" />
     <Compile Include="RequestModels\ForceEvent.cs" />
-    <Compile Include="RequestModels\PullRequest.cs" />
-    <Compile Include="RequestModels\PullRequestEvent.cs" />
     <Compile Include="RequestModels\Owner.cs" />
     <Compile Include="RequestModels\PushEvent.cs" />
     <Compile Include="Program.cs" />
