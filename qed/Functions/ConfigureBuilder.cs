@@ -14,7 +14,6 @@
             {
                 dispatcher.Get("/", Handlers.GetHome);
                 dispatcher.Post("/events/push", Handlers.PostPushEvent);
-                dispatcher.Post("/events/pull-request", Handlers.PostPullRequestEvent);
                 dispatcher.Post("/events/force", Handlers.PostForceEvent);
                 dispatcher.Get("/{owner}/{name}", Handlers.GetBuilds);
                 dispatcher.Get("/{owner}/{name}/builds/{id}", Handlers.GetBuild);
