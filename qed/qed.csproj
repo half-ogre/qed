@@ -66,6 +66,9 @@
     <Reference Include="Owin">
       <HintPath>$(SolutionDir)packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
     </Reference>
+    <Reference Include="Owin.Builder">
+      <HintPath>..\packages\Owin.Builder.0.8.5\lib\net40\Owin.Builder.dll</HintPath>
+    </Reference>
     <Reference Include="Raven.Abstractions">
       <HintPath>$(SolutionDir)packages\RavenDB.Client.2.5.2750\lib\net45\Raven.Abstractions.dll</HintPath>
     </Reference>
@@ -142,7 +145,6 @@
     <Compile Include="Functions\CreateRavenStore.cs" />
     <Compile Include="Functions\OpenRavenSession.cs" />
     <Compile Include="OwinMiddleware\Dispatcher.cs" />
-    <Compile Include="OwinBuilder.cs" />
     <Compile Include="OwinMiddleware\Mustache.cs" />
     <Compile Include="RavenDocuments\Build.cs" />
     <Compile Include="BuildConfiguration.cs" />

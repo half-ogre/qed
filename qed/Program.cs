@@ -1,22 +1,27 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
+using System.Threading.Tasks;
 using Nowin;
+using Owin.Builder;
 using fn = qed.Functions;
 
 namespace qed
 {
+    using AppFunc = Func<IDictionary<string, object>, Task>;
+
     class Program
     {
         static void Main()
         {
-            var appBuilder = new OwinBuilder();
+            var appBuilder = new AppBuilder();
 
             fn.ConfigureBuilder(appBuilder);
 
             var serverBuilder = ServerBuilder
                 .New()
                 .SetPort(1754)
-                .SetOwinApp(appBuilder.ToOwinApp());
+                .SetOwinApp(appBuilder.Build(typeof(AppFunc)) as AppFunc);
 
             var server = serverBuilder.Start();
 

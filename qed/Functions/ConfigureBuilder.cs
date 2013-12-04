@@ -1,8 +1,10 @@
-﻿namespace qed
+﻿using Owin;
+
+namespace qed
 {
     public static partial class Functions
     {
-        public static void ConfigureBuilder(OwinBuilder builder)
+        public static void ConfigureBuilder(IAppBuilder builder)
         {
             builder.Use(ContentType.Create());
 
