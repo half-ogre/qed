@@ -158,6 +158,7 @@
     <Compile Include="RavenDocuments\User.cs" />
     <Compile Include="RavenDocuments\Build.cs" />
     <Compile Include="BuildConfiguration.cs" />
+    <Compile Include="RavenQueries\GetUserByUsername.cs" />
     <Compile Include="RavenQueries\GetNextBuild.cs" />
     <Compile Include="RavenQueries\GetCurrentBuild.cs" />
     <Compile Include="RavenQueries\GetLastFinishedBuild.cs" />
