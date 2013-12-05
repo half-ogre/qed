@@ -11,13 +11,13 @@ namespace qed
     using HandlerFunc = Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>;
     using MiddlewareFunc = Func<Func<IDictionary<string, object>, Task>, Func<IDictionary<string, object>, Task>>;
 
-    public class Dispatcher
+    public class DispatcherMiddleware
     {
         readonly IDictionary<string, List<Tuple<Regex, HandlerFunc>>> _handlers;
         
         static readonly Regex _tokenRegex = new Regex(@"\{([a-z]+)\}", RegexOptions.IgnoreCase);
 
-        private Dispatcher()
+        private DispatcherMiddleware()
         {
             _handlers = new Dictionary<string, List<Tuple<Regex, HandlerFunc>>>();
         }
@@ -31,9 +31,9 @@ namespace qed
             _handlers[key].Add(handler);
         }
 
-        public static MiddlewareFunc Create(Action<Dispatcher> configure)
+        public static MiddlewareFunc Create(Action<DispatcherMiddleware> configure)
         {
-            var dispatcher = new Dispatcher();
+            var dispatcher = new DispatcherMiddleware();
 
             configure(dispatcher);
 

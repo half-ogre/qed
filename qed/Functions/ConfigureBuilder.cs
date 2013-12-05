@@ -12,7 +12,7 @@ namespace qed
                 templateRootDirectoryName: "MustacheTemplates",
                 layoutTemplateName: "_layout"));
 
-            builder.Use(Dispatcher.Create(dispatcher =>
+            builder.Use(DispatcherMiddleware.Create(dispatcher =>
             {
                 dispatcher.Get("/", Handlers.GetHome);
                 dispatcher.Post("/events/push", Handlers.PostPushEvent);

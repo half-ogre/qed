@@ -144,7 +144,7 @@
     <Compile Include="Functions\ConfigureBuilder.cs" />
     <Compile Include="Functions\CreateRavenStore.cs" />
     <Compile Include="Functions\OpenRavenSession.cs" />
-    <Compile Include="OwinMiddleware\Dispatcher.cs" />
+    <Compile Include="OwinMiddleware\DispatcherMiddleware.cs" />
     <Compile Include="OwinMiddleware\Mustache.cs" />
     <Compile Include="RavenDocuments\Build.cs" />
     <Compile Include="BuildConfiguration.cs" />
