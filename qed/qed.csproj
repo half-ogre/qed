@@ -135,6 +135,7 @@
     <Compile Include="Functions\SetConfiguration.cs" />
     <Compile Include="OwinMiddleware\ContentType.cs" />
     <Compile Include="OwinMiddleware\Dispatcher.cs" />
+    <Compile Include="OwinMiddleware\DispatcherHandler.cs" />
     <Compile Include="OwinMiddleware\IDispatcher.cs" />
     <Compile Include="RavenCommands\AppendBuidOutput.cs" />
     <Compile Include="RavenCommands\SetBuildRevision.cs" />
