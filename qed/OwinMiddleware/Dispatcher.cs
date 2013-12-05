@@ -7,21 +7,22 @@ using System.Threading.Tasks;
 
 namespace qed
 {
-    using HandlerFunc = Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>;
+    using HandlerFunc = Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task>;
+    using HandlerWithParamsFunc = Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>;
     using MiddlewareFunc = Func<Func<IDictionary<string, object>, Task>, Func<IDictionary<string, object>, Task>>;
 
     public class Dispatcher : IDispatcher
     {
-        readonly IDictionary<string, List<Tuple<Regex, HandlerFunc>>> _handlers;
+        readonly IDictionary<string, List<Tuple<Regex, HandlerWithParamsFunc>>> _handlers;
 
         static readonly Regex _tokenRegex = new Regex(@"\{([a-z]+)\}", RegexOptions.IgnoreCase);
 
         public Dispatcher()
         {
-            _handlers = new Dictionary<string, List<Tuple<Regex, HandlerFunc>>>();
+            _handlers = new Dictionary<string, List<Tuple<Regex, HandlerWithParamsFunc>>>();
         }
 
-        protected virtual void AddHandler(string method, Tuple<Regex, HandlerFunc> handler)
+        protected virtual void AddHandler(string method, Tuple<Regex, HandlerWithParamsFunc> handler)
         {
             var key = method.ToLowerInvariant();
 
@@ -39,18 +40,18 @@ namespace qed
 
         public void Delete(
             string urlPattern,
-            Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handler)
         {
             Delete(urlPattern, (environment, @params, next) => handler(environment, next));
         }
 
         public void Delete(
             string urlPattern,
-            HandlerFunc handler)
+            HandlerWithParamsFunc handler)
         {
             AddHandler(
                 "DELETE",
-                new Tuple<Regex, HandlerFunc>(
+                new Tuple<Regex, HandlerWithParamsFunc>(
                     CreateRegexForUrlPattern(urlPattern),
                     handler));
         }
@@ -60,10 +61,10 @@ namespace qed
             var key = method.ToLowerInvariant();
 
             if (!_handlers.ContainsKey(key))
-                _handlers.Add(key, new List<Tuple<Regex, HandlerFunc>>());
+                _handlers.Add(key, new List<Tuple<Regex, HandlerWithParamsFunc>>());
         }
 
-        public virtual Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> FindHandler(string method, string path)
+        public virtual HandlerFunc FindHandler(string method, string path)
         {
             var key = method.ToLowerInvariant();
 
@@ -91,72 +92,72 @@ namespace qed
 
         public void Get(
             string urlPattern,
-            Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handler)
         {
             Get(urlPattern, (environment, @params, next) => handler(environment, next));
         }
 
         public void Get(
             string urlPattern,
-            HandlerFunc handler)
+            HandlerWithParamsFunc handler)
         {
             AddHandler(
                 "GET",
-                new Tuple<Regex, HandlerFunc>(
+                new Tuple<Regex, HandlerWithParamsFunc>(
                     CreateRegexForUrlPattern(urlPattern),
                     handler));
         }
 
         public void Patch(
             string urlPattern,
-            Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handler)
         {
             Patch(urlPattern, (environment, @params, next) => handler(environment, next));
         }
 
         public void Patch(
             string urlPattern,
-            HandlerFunc handler)
+            HandlerWithParamsFunc handler)
         {
             AddHandler(
                 "PATCH",
-                new Tuple<Regex, HandlerFunc>(
+                new Tuple<Regex, HandlerWithParamsFunc>(
                     CreateRegexForUrlPattern(urlPattern),
                     handler));
         }
 
         public void Post(
             string urlPattern,
-            Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handler)
         {
             Post(urlPattern, (environment, @params, next) => handler(environment, next));
         }
 
         public void Post(
             string urlPattern,
-            HandlerFunc handler)
+            HandlerWithParamsFunc handler)
         {
             AddHandler(
                 "POST",
-                new Tuple<Regex, HandlerFunc>(
+                new Tuple<Regex, HandlerWithParamsFunc>(
                     CreateRegexForUrlPattern(urlPattern),
                     handler));
         }
 
         public void Put(
             string urlPattern,
-            Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handler)
         {
             Put(urlPattern, (environment, @params, next) => handler(environment, next));
         }
 
         public void Put(
             string urlPattern,
-            HandlerFunc handler)
+            HandlerWithParamsFunc handler)
         {
             AddHandler(
                 "PUT",
-                new Tuple<Regex, HandlerFunc>(
+                new Tuple<Regex, HandlerWithParamsFunc>(
                     CreateRegexForUrlPattern(urlPattern),
                     handler));
         }
