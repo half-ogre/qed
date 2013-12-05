@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Owin.Builder;
 using Nowin;
-using Owin.Builder;
 using fn = qed.Functions;
 
 namespace qed
@@ -16,12 +16,15 @@ namespace qed
         {
             var appBuilder = new AppBuilder();
 
-            fn.ConfigureBuilder(appBuilder);
+            OwinServerFactory.Initialize(appBuilder.Properties);
 
+            fn.ConfigureBuilder(appBuilder);
+            
             var serverBuilder = ServerBuilder
                 .New()
                 .SetPort(1754)
-                .SetOwinApp(appBuilder.Build(typeof(AppFunc)) as AppFunc);
+                .SetOwinApp(appBuilder.Build())
+                .SetOwinCapabilities((IDictionary<string, object>)appBuilder.Properties[OwinKeys.ServerCapabilitiesKey]);
 
             var server = serverBuilder.Start();
 
