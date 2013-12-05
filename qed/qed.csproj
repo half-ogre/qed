@@ -204,6 +204,9 @@
     <Content Include="MustacheTemplates\queued.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="MustacheTemplates\sign-up-form.mustache">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <Content Include="MustacheTemplates\home.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
