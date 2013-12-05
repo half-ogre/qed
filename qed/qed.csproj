@@ -143,6 +143,7 @@
     <Compile Include="OwinMiddleware\DispatcherHandler.cs" />
     <Compile Include="OwinMiddleware\IDispatcher.cs" />
     <Compile Include="RavenCommands\AppendBuidOutput.cs" />
+    <Compile Include="RavenCommands\CreateUser.cs" />
     <Compile Include="RavenCommands\SetBuildRevision.cs" />
     <Compile Include="RavenCommands\SetBuildFinished.cs" />
     <Compile Include="RavenCommands\SetBuildStarted.cs" />
