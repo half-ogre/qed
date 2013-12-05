@@ -10,7 +10,7 @@ namespace qed
 
     public class DispatcherMiddleware
     {
-        public static MiddlewareFunc Create(Action<Dispatcher> configure)
+        public static MiddlewareFunc Create(Action<IDispatcher> configure)
         {
             var dispatcher = new Dispatcher();
 

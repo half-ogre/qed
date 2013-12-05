@@ -10,7 +10,7 @@ namespace qed
     using HandlerFunc = Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>;
     using MiddlewareFunc = Func<Func<IDictionary<string, object>, Task>, Func<IDictionary<string, object>, Task>>;
 
-    public class Dispatcher
+    public class Dispatcher : IDispatcher
     {
         readonly IDictionary<string, List<Tuple<Regex, HandlerFunc>>> _handlers;
 
@@ -21,7 +21,7 @@ namespace qed
             _handlers = new Dictionary<string, List<Tuple<Regex, HandlerFunc>>>();
         }
 
-        void AddHandler(string method, Tuple<Regex, HandlerFunc> handler)
+        protected virtual void AddHandler(string method, Tuple<Regex, HandlerFunc> handler)
         {
             var key = method.ToLowerInvariant();
 
@@ -30,7 +30,7 @@ namespace qed
             _handlers[key].Add(handler);
         }
 
-        static Regex CreateRegexForUrlPattern(string urlPattern)
+        protected virtual Regex CreateRegexForUrlPattern(string urlPattern)
         {
             var regexString = _tokenRegex.Replace(urlPattern, @"(?<$1>[^/]+)");
 
@@ -63,7 +63,7 @@ namespace qed
                 _handlers.Add(key, new List<Tuple<Regex, HandlerFunc>>());
         }
 
-        public Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> FindHandler(string method, string path)
+        public virtual Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> FindHandler(string method, string path)
         {
             var key = method.ToLowerInvariant();
 
