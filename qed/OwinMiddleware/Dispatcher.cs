@@ -8,20 +8,21 @@ using OwinExtensions;
 
 namespace qed
 {
+    using HandlerFunc = Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>;
     using MiddlewareFunc = Func<Func<IDictionary<string, object>, Task>, Func<IDictionary<string, object>, Task>>;
 
     public class Dispatcher
     {
-        readonly IDictionary<string, List<Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>>> _handlers;
+        readonly IDictionary<string, List<Tuple<Regex, HandlerFunc>>> _handlers;
         
         static readonly Regex _tokenRegex = new Regex(@"\{([a-z]+)\}", RegexOptions.IgnoreCase);
 
         private Dispatcher()
         {
-            _handlers = new Dictionary<string, List<Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>>>();
+            _handlers = new Dictionary<string, List<Tuple<Regex, HandlerFunc>>>();
         }
 
-        void AddHandler(string method, Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>> handler)
+        void AddHandler(string method, Tuple<Regex, HandlerFunc> handler)
         {
             var key = method.ToLowerInvariant();
 
@@ -66,11 +67,11 @@ namespace qed
 
         public void Delete(
             string urlPattern,
-            Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handler)
         {
             AddHandler(
                 "DELETE",
-                new Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>(
+                new Tuple<Regex, HandlerFunc>(
                     CreateRegexForUrlPattern(urlPattern),
                     handler));
         }
@@ -80,7 +81,7 @@ namespace qed
             var key = method.ToLowerInvariant();
 
             if (!_handlers.ContainsKey(key))
-                _handlers.Add(key, new List<Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>>());
+                _handlers.Add(key, new List<Tuple<Regex, HandlerFunc>>());
         }
 
         Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> FindHandler(string method, string path)
@@ -118,11 +119,11 @@ namespace qed
 
         public void Get(
             string urlPattern,
-            Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handler)
         {
             AddHandler(
                 "GET",
-                new Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>(
+                new Tuple<Regex, HandlerFunc>(
                     CreateRegexForUrlPattern(urlPattern),
                     handler));
         }
@@ -136,11 +137,11 @@ namespace qed
 
         public void Patch(
             string urlPattern,
-            Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handler)
         {
             AddHandler(
                 "PATCH",
-                new Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>(
+                new Tuple<Regex, HandlerFunc>(
                     CreateRegexForUrlPattern(urlPattern),
                     handler));
         }
@@ -154,11 +155,11 @@ namespace qed
 
         public void Post(
             string urlPattern,
-            Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handler)
         {
             AddHandler(
                 "POST",
-                new Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>(
+                new Tuple<Regex, HandlerFunc>(
                     CreateRegexForUrlPattern(urlPattern),
                     handler));
         }
@@ -172,11 +173,11 @@ namespace qed
 
         public void Put(
             string urlPattern,
-            Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handler)
         {
             AddHandler(
                 "PUT",
-                new Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>(
+                new Tuple<Regex, HandlerFunc>(
                     CreateRegexForUrlPattern(urlPattern),
                     handler));
         }
