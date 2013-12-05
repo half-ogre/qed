@@ -106,6 +106,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\GeneratePasswordHash.cs" />
     <Compile Include="Functions\GetRepositoryUrl.cs" />
     <Compile Include="Functions\GetHeadSha.cs" />
     <Compile Include="Functions\To.cs" />
