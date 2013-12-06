@@ -91,6 +91,7 @@ namespace qed
             {
                 dispatcher.Get("/", Handlers.GetHome);
                 dispatcher.Get("/users", challengeIfNotAdministrator, Handlers.GetUsers);
+                dispatcher.Patch("/users/{username}", forbidIfNotAdministrator, Handlers.PatchUser);
                 dispatcher.Post("/events/push", Handlers.PostPushEvent);
                 dispatcher.Post("/events/force", forbidIfNotAdministrator, Handlers.PostForceEvent);
                 dispatcher.Get("/forms/sign-up", forbidIfSignedIn, Handlers.GetSignUpForm);

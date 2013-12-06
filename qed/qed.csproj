@@ -178,6 +178,7 @@
     <Compile Include="RavenQueries\GetLastFinishedBuild.cs" />
     <Compile Include="RavenQueries\GetBuilds.cs" />
     <Compile Include="RavenQueries\GetBuild.cs" />
+    <Compile Include="RequestHandlers\PatchUser.cs" />
     <Compile Include="RequestHandlers\GetUsers.cs" />
     <Compile Include="RequestHandlers\DeleteSession.cs" />
     <Compile Include="RequestHandlers\GetSignInForm.cs" />
