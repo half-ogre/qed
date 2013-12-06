@@ -134,6 +134,10 @@ type EnvironmentExt() =
         EnvironmentExt.WriteAsync (environment, text, Encoding.UTF8, token)
 
     [<Extension>]
+    static member Set (environment:Environment, key:string, value:'a) =
+        environment.[key] <- value
+
+    [<Extension>]
     static member SetResponseHeader (environment:Environment, key:string, value:string) = 
         let headers = EnvironmentExt.GetResponseHeaders(environment)
 
