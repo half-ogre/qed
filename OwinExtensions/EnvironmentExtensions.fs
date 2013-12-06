@@ -134,5 +134,18 @@ type EnvironmentExt() =
         EnvironmentExt.WriteAsync (environment, text, Encoding.UTF8, token)
 
     [<Extension>]
+    static member SetResponseHeader (environment:Environment, key:string, value:string) = 
+        let headers = EnvironmentExt.GetResponseHeaders(environment)
+
+        match value with
+            | null -> headers.Remove(key) |> ignore
+            | _ -> headers.[key] <- [| value |]
+
+    [<Extension>]
+    static member SetRedirect (environment:Environment, location:string) = 
+        EnvironmentExt.SetStatusCode(environment, 302)
+        EnvironmentExt.SetResponseHeader(environment, "Location", location)
+
+    [<Extension>]
     static member SetStatusCode (environment:Environment, statusCode:int) = 
         environment.[ResponseStatusCodeKey] <- statusCode

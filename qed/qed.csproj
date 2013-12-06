@@ -167,6 +167,7 @@
     <Compile Include="RavenQueries\GetBuilds.cs" />
     <Compile Include="RavenQueries\GetBuild.cs" />
     <Compile Include="RequestHandlers\GetSignUpForm.cs" />
+    <Compile Include="RequestHandlers\PostUsers.cs" />
     <Compile Include="RequestHandlers\PostBuild.cs" />
     <Compile Include="RequestHandlers\PostForceEvent.cs" />
     <Compile Include="RequestHandlers\GetBuild.cs" />

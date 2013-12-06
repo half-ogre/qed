@@ -1,9 +1,15 @@
-﻿using Owin;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Principal;
+using System.Threading.Tasks;
+using Microsoft.Owin;
+using Owin;
 using OwinExtensions;
 
 namespace qed
 {
+    using MiddlewareFunc = Func<Func<IDictionary<string, object>, Task>, Func<IDictionary<string, object>, Task>>;
+
     public static partial class Functions
     {
         public static void ConfigureBuilder(IAppBuilder builder)
@@ -32,6 +38,7 @@ namespace qed
                 dispatcher.Post("/events/push", Handlers.PostPushEvent);
                 dispatcher.Post("/events/force", Handlers.PostForceEvent);
                 dispatcher.Get("/forms/sign-up", forbidIfSignedIn, Handlers.GetSignUpForm);
+                dispatcher.Post("/users", forbidIfSignedIn, Handlers.PostUsers);
                 dispatcher.Get("/{owner}/{name}", Handlers.GetBuilds);
                 dispatcher.Get("/{owner}/{name}/builds/{id}", Handlers.GetBuild);
                 dispatcher.Post("/{owner}/{name}/builds", Handlers.PostBuild);
