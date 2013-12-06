@@ -40,6 +40,18 @@ namespace qed
                 return next(env);
             });
 
+            var forbidIfNotAdministrator = new MiddlewareFunc(next => env =>
+            {
+                var user = env.GetUser();
+                if (user == null || !user.IsAdministrator)
+                {
+                    env.SetStatusCode(403);
+                    return env.GetCompleted();
+                }
+
+                return next(env);
+            });
+
             builder.Use(ContentType.Create());
 
             builder.Use(MethodOverrideMiddleware.Create());
@@ -61,7 +73,7 @@ namespace qed
             {
                 dispatcher.Get("/", Handlers.GetHome);
                 dispatcher.Post("/events/push", Handlers.PostPushEvent);
-                dispatcher.Post("/events/force", Handlers.PostForceEvent);
+                dispatcher.Post("/events/force", forbidIfNotAdministrator, Handlers.PostForceEvent);
                 dispatcher.Get("/forms/sign-up", forbidIfSignedIn, Handlers.GetSignUpForm);
                 dispatcher.Get("/forms/sign-in", forbidIfSignedIn, Handlers.GetSignInForm);
                 dispatcher.Put("/session", forbidIfSignedIn, Handlers.PutSession);
@@ -69,7 +81,7 @@ namespace qed
                 dispatcher.Delete("/session", forbidIfNotSignedIn, Handlers.DeleteSession);
                 dispatcher.Get("/{owner}/{name}", Handlers.GetBuilds);
                 dispatcher.Get("/{owner}/{name}/builds/{id}", Handlers.GetBuild);
-                dispatcher.Post("/{owner}/{name}/builds", Handlers.PostBuild);
+                dispatcher.Post("/{owner}/{name}/builds", forbidIfNotAdministrator, Handlers.PostBuild);
             }));
         }
     }

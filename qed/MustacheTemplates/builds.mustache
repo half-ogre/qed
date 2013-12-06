@@ -1,4 +1,5 @@
 ﻿  <h1><a href="/">Home</a> &raquo; {{owner}}/{{name}}</h1>
+  {{#isAdministrator}}
   <form action="/{{owner}}/{{name}}/builds" method="POST">
     <div class="form-group">
       <label for="branch-or-pr">Enter a branch (e.g. <i>master</i>) or a pull request (e.g. <i>#42</i>) to build:</label>
@@ -9,6 +10,7 @@
       <button type="submit">Build</button>
     </div>
   </form>
+  {{/isAdministrator}}
   <ul>
     {{#builds}}
 	  <li>
