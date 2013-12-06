@@ -138,6 +138,10 @@ type EnvironmentExt() =
         environment.[key] <- value
 
     [<Extension>]
+    static member SetRequestMethod (environment:Environment, requestMethod:string) =
+        EnvironmentExt.Set(environment, RequestMethodKey, requestMethod)
+
+    [<Extension>]
     static member SetResponseHeader (environment:Environment, key:string, value:string) = 
         let headers = EnvironmentExt.GetResponseHeaders(environment)
 
