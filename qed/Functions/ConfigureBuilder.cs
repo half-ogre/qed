@@ -52,6 +52,18 @@ namespace qed
                 return next(env);
             });
 
+            var challengeIfNotAdministrator = new MiddlewareFunc(next => env =>
+            {
+                var user = env.GetUser();
+                if (user == null || !user.IsAdministrator)
+                {
+                    env.SetStatusCode(401);
+                    return env.GetCompleted();
+                }
+
+                return next(env);
+            });
+
             builder.Use(ContentType.Create());
 
             builder.Use(MethodOverrideMiddleware.Create());
@@ -78,6 +90,7 @@ namespace qed
             builder.Use(DispatcherMiddleware.Create(dispatcher =>
             {
                 dispatcher.Get("/", Handlers.GetHome);
+                dispatcher.Get("/users", challengeIfNotAdministrator, Handlers.GetUsers);
                 dispatcher.Post("/events/push", Handlers.PostPushEvent);
                 dispatcher.Post("/events/force", forbidIfNotAdministrator, Handlers.PostForceEvent);
                 dispatcher.Get("/forms/sign-up", forbidIfSignedIn, Handlers.GetSignUpForm);
