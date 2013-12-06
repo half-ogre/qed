@@ -39,8 +39,11 @@ namespace qed
                         })
                     })
                 .ToList();
-            
-            return environment.Render("home", new { configuredRepos });
+
+            return environment.Render("home", new
+            {
+                configuredRepos
+            });
         }
     }
 }

@@ -1,0 +1,24 @@
+﻿  <h1><a href="/">Home</a> &raquo; Users</h1>
+  <ul id="users">
+    {{#users}}
+	  <li>
+      {{username}}{{administrator}}{{#isMe}} (You){{/isMe}}
+      {{^isMe}}
+      {{#administrator}}
+      <form action="/users/{{username}}" method="POST">
+        <input type="hidden" name="_method" value="PATCH" />
+        <input type="hidden" name="isAdministrator" value="0" />
+        <button type="submit">Revoke Administrator</button>
+      </form>
+      {{/administrator}}
+      {{^administrator}}
+      <form action="/users/{{username}}" method="POST">
+        <input type="hidden" name="_method" value="PATCH" />
+        <input type="hidden" name="isAdministrator" value="1" />
+        <button type="submit">Make Administrator</button>
+      </form>
+      {{/administrator}}
+      {{/isMe}}
+    </li>
+    {{/users}}
+  </ul>

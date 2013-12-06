@@ -1,4 +1,4 @@
-﻿module UnitTests.the_parseForm_function
+﻿module UnitTests.``the parseForm function``
 #if DEBUG
 
 open System
@@ -8,7 +8,7 @@ open helpers
 open Xunit
 
 [<Fact>] 
-let parses_a_single_key_and_value() = 
+let ``parses a single key and value`` () = 
     let formText = "key=value"
 
     let form = parseForm formText
@@ -18,7 +18,7 @@ let parses_a_single_key_and_value() =
     Assert.Equal("value", form.Values.ElementAt(0).ElementAt(0))
 
 [<Fact>] 
-let parses_a_key_with_multiple_values() =
+let ``parses a key with multiple values`` () =
     let  formText = "key=value1&key=value2"
 
     let form = parseForm formText
@@ -29,7 +29,7 @@ let parses_a_key_with_multiple_values() =
     Assert.Equal("value2", form.Values.ElementAt(0).ElementAt(1))
 
 [<Fact>] 
-let parses_form_text_with_multuple_keys_and_values() =
+let ``parses form text with multuple keys and values`` () =
     let formText = "key1=value1a&key1=value1b&key2=value2"
 
     let form = parseForm formText
@@ -42,7 +42,7 @@ let parses_form_text_with_multuple_keys_and_values() =
     Assert.Equal("value2", form.Values.ElementAt(1).ElementAt(0))
 
 [<Fact>] 
-let decodes_keys() =
+let ``decodes keys`` () =
     let formText = sprintf "%s=value" (Uri.EscapeDataString("&key"))
 
     let form = parseForm formText
@@ -51,7 +51,7 @@ let decodes_keys() =
     Assert.Equal("&key", form.Keys.ElementAt(0))
 
 [<Fact>] 
-let decodes_keys_with_spaces() =
+let ``decodes keys with spaces`` () =
     let formText = "key+one=value"
 
     let form = parseForm formText
@@ -60,7 +60,7 @@ let decodes_keys_with_spaces() =
     Assert.Equal("key one", form.Keys.ElementAt(0))
 
 [<Fact>] 
-let decodes_values() =
+let ``decodes values`` () =
     let formText = sprintf "key=%s" (Uri.EscapeDataString("&value"))
 
     let form = parseForm formText
@@ -69,7 +69,7 @@ let decodes_values() =
     Assert.Equal("&value", form.Values.ElementAt(0).ElementAt(0))
 
 [<Fact>] 
-let decodes_values_with_spaces() =
+let ``decodes values with spaces`` () =
     let formText = "key=value+one"
 
     let form = parseForm formText
@@ -78,7 +78,7 @@ let decodes_values_with_spaces() =
     Assert.Equal("value one", form.Values.ElementAt(0).ElementAt(0))
 
 [<Fact>] 
-let parses_a_key_with_no_value() =
+let ``parses a key with no value`` () =
     let  formText = "key="
 
     let form = parseForm formText

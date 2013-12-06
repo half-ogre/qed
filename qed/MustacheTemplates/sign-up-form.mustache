@@ -1,0 +1,17 @@
+﻿  <h1><a href="/">Home</a> &raquo; Sign Up</h1>
+  <form action="/users" method="POST">
+    <div class="form-group">
+      <ul class="errors">
+        {{#errors}}
+        <li>{{error}}</li>
+        {{/errors}}
+      </ul>
+      <label for="username">Username (just letters and numbers, please):</label>
+      <input name="username" type="text" value="{{username}}" />
+      <label for="password">Password (the longer the better):</label>
+      <input name="password" type="password" />
+      <label for="email-address">Email Address (in case you forget your password):</label>
+      <input name="email-address" type="text" value="{{emailAddress}}" />
+      <button type="submit">Sign Up</button>
+    </div>
+  </form>

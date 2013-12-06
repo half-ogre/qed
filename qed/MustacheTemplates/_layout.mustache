@@ -45,7 +45,7 @@
       margin-bottom: 5px;
     }
 
-    label.error {
+    label.error, ul.errors li {
       color: red;
       font-style: italic;
     }
@@ -70,11 +70,51 @@
 	.build-queued { color: #666; }
 
     .build-succeeded { color: green; }
+
+	form button { display: block; }
+
+	form input { margin-bottom: 10px; }
+
+	ul#control-box {
+	  position: absolute;
+	  right: 0;
+	  top: 0;
+	  margin-right: 10px;
+	}
+
+	ul#control-box li {
+	  display: inline;
+      margin-left: 10px;
+	}
+
+	ul#control-box form, ul#control-box form button, ul#users form, ul#users form button {
+	  display: inline;
+	}
+
+	ul#control-box a {
+	  color: white;
+	  text-decoration: none;
+	}
   </style>
 </head>
 <body>
   <header>
     <p><a href="/">QED CI</a></p>
+	<ul id="control-box">
+	  {{#user}}
+	  <li>@{{username}}</li>
+	  <li>
+	    <form action="/session" method="POST">
+			<input type="hidden" name="_method" value="DELETE" />
+			<button type="submit">Sign Out</button>
+		</form>
+	  </li>
+	  {{/user}}
+	  {{^user}}
+	  <li><a href="/forms/sign-in">Sign In</a></li>
+	  <li><a href="/forms/sign-up">Sign Up</a></li>
+	  {{/user}}
+	</ul>
   </header>
   <section class="main">
     {{>body}}

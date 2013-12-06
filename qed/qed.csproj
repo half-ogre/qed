@@ -45,6 +45,18 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>$(SolutionDir)packages\Microsoft.Data.OData.5.2.0\lib\net40\Microsoft.Data.OData.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Owin">
+      <HintPath>..\packages\Microsoft.Owin.2.0.2\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting">
+      <HintPath>..\packages\Microsoft.Owin.Hosting.2.0.2\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security">
+      <HintPath>..\packages\Microsoft.Owin.Security.2.0.2\lib\net45\Microsoft.Owin.Security.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Security.Cookies">
+      <HintPath>..\packages\Microsoft.Owin.Security.Cookies.2.0.2\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.WindowsAzure.Configuration">
       <HintPath>$(SolutionDir)packages\Microsoft.WindowsAzure.ConfigurationManager.1.8.0.0\lib\net35-full\Microsoft.WindowsAzure.Configuration.dll</HintPath>
     </Reference>
@@ -100,6 +112,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Functions\CompareToPasswordHash.cs" />
+    <Compile Include="Functions\ToDictionary.cs" />
+    <Compile Include="Functions\GeneratePasswordHash.cs" />
     <Compile Include="Functions\GetRepositoryUrl.cs" />
     <Compile Include="Functions\GetHeadSha.cs" />
     <Compile Include="Functions\To.cs" />
@@ -130,8 +145,17 @@
     <Compile Include="Functions\SetGitHubBuildFinished.cs" />
     <Compile Include="Functions\SetGitHubBuildStatus.cs" />
     <Compile Include="Functions\SetConfiguration.cs" />
+    <Compile Include="OwinExtensions\RemoveUser.cs" />
+    <Compile Include="OwinExtensions\GetUser.cs" />
+    <Compile Include="OwinExtensions\SetUser.cs" />
     <Compile Include="OwinMiddleware\ContentType.cs" />
+    <Compile Include="OwinMiddleware\MethodOverrideMiddleware.cs" />
+    <Compile Include="OwinMiddleware\Dispatcher.cs" />
+    <Compile Include="OwinMiddleware\DispatcherHandler.cs" />
+    <Compile Include="OwinMiddleware\IDispatcher.cs" />
     <Compile Include="RavenCommands\AppendBuidOutput.cs" />
+    <Compile Include="RavenCommands\CreateUser.cs" />
+    <Compile Include="RavenCommands\SetUserIsAdministrator.cs" />
     <Compile Include="RavenCommands\SetBuildRevision.cs" />
     <Compile Include="RavenCommands\SetBuildFinished.cs" />
     <Compile Include="RavenCommands\SetBuildStarted.cs" />
@@ -141,16 +165,26 @@
     <Compile Include="Functions\ConfigureBuilder.cs" />
     <Compile Include="Functions\CreateRavenStore.cs" />
     <Compile Include="Functions\OpenRavenSession.cs" />
-    <Compile Include="OwinMiddleware\Dispatcher.cs" />
-    <Compile Include="OwinBuilder.cs" />
+    <Compile Include="OwinMiddleware\DispatcherMiddleware.cs" />
     <Compile Include="OwinMiddleware\Mustache.cs" />
+    <Compile Include="RavenDocuments\User.cs" />
     <Compile Include="RavenDocuments\Build.cs" />
     <Compile Include="BuildConfiguration.cs" />
+    <Compile Include="RavenQueries\GetUsers.cs" />
+    <Compile Include="RavenQueries\GetUserByUsername.cs" />
+    <Compile Include="RavenQueries\GetUsersCount.cs" />
     <Compile Include="RavenQueries\GetNextBuild.cs" />
     <Compile Include="RavenQueries\GetCurrentBuild.cs" />
     <Compile Include="RavenQueries\GetLastFinishedBuild.cs" />
     <Compile Include="RavenQueries\GetBuilds.cs" />
     <Compile Include="RavenQueries\GetBuild.cs" />
+    <Compile Include="RequestHandlers\PatchUser.cs" />
+    <Compile Include="RequestHandlers\GetUsers.cs" />
+    <Compile Include="RequestHandlers\DeleteSession.cs" />
+    <Compile Include="RequestHandlers\GetSignInForm.cs" />
+    <Compile Include="RequestHandlers\GetSignUpForm.cs" />
+    <Compile Include="RequestHandlers\PostUsers.cs" />
+    <Compile Include="RequestHandlers\PutSession.cs" />
     <Compile Include="RequestHandlers\PostBuild.cs" />
     <Compile Include="RequestHandlers\PostForceEvent.cs" />
     <Compile Include="RequestHandlers\GetBuild.cs" />
@@ -167,6 +201,7 @@
     <Compile Include="RequestHandlers\PostPushEvent.cs" />
     <Compile Include="RequestModels\Repository.cs" />
     <Compile Include="UnitTests\Functions\SetGitHubBuildStatusUnitTests.cs" />
+    <Compile Include="UnitTests\Functions\CompareToPasswordHash.cs" />
     <Compile Include="UnitTests\Functions\UntilUnitTests.cs" />
     <Compile Include="UnitTests\Functions\SinceUnitTests.cs" />
     <Compile Include="UnitTests\Functions\ToUnitTests.cs" />
@@ -186,6 +221,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MustacheTemplates\queued.mustache">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MustacheTemplates\sign-up-form.mustache">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MustacheTemplates\sign-in-form.mustache">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MustacheTemplates\users.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />

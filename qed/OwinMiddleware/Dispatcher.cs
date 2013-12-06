@@ -2,26 +2,30 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
-using OwinExtensions;
 
 namespace qed
 {
+    using HandlerFunc = Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task>;
+    using HandlerWithParamsFunc = Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>;
     using MiddlewareFunc = Func<Func<IDictionary<string, object>, Task>, Func<IDictionary<string, object>, Task>>;
 
-    public class Dispatcher
+    public class Dispatcher : IDispatcher
     {
-        readonly IDictionary<string, List<Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>>> _handlers;
-        
+        readonly IDictionary<string, List<DispatcherHandler>> _handlers;
+
         static readonly Regex _tokenRegex = new Regex(@"\{([a-z]+)\}", RegexOptions.IgnoreCase);
 
-        private Dispatcher()
+        public Dispatcher()
         {
-            _handlers = new Dictionary<string, List<Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>>>();
+            _handlers = new Dictionary<string, List<DispatcherHandler>>();
         }
 
-        void AddHandler(string method, Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>> handler)
+        public virtual void AddHandler(
+            string method, 
+            DispatcherHandler handler)
         {
             var key = method.ToLowerInvariant();
 
@@ -30,27 +34,7 @@ namespace qed
             _handlers[key].Add(handler);
         }
 
-        public static MiddlewareFunc Create(Action<Dispatcher> configure)
-        {
-            var dispatcher = new Dispatcher();
-
-            configure(dispatcher);
-
-            return next => environment =>
-            {
-                var method = environment.GetMethod();
-                var path = environment.GetPath();
-
-                var handler = dispatcher.FindHandler(method, path);
-
-                if (handler == null)
-                    return next(environment);
-
-                return handler(environment, next);
-            };
-        }
-        
-        static Regex CreateRegexForUrlPattern(string urlPattern)
+        protected virtual Regex CreateRegexForUrlPattern(string urlPattern)
         {
             var regexString = _tokenRegex.Replace(urlPattern, @"(?<$1>[^/]+)");
 
@@ -59,20 +43,53 @@ namespace qed
 
         public void Delete(
             string urlPattern,
-            Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handlerFunc)
         {
-            Delete(urlPattern, (environment, @params, next) => handler(environment, next));
+            Delete(urlPattern, new MiddlewareFunc[0], (environment, @params, next) => handlerFunc(environment, next));
         }
 
         public void Delete(
             string urlPattern,
-            Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerWithParamsFunc handlerFunc)
+        {
+            Delete(urlPattern, new MiddlewareFunc[0], handlerFunc);
+        }
+
+        public void Delete(
+            string urlPattern,
+            MiddlewareFunc middlewareFunc,
+            HandlerFunc handlerFunc)
+        {
+            Delete(urlPattern, new []{ middlewareFunc }, (environment, @params, next) => handlerFunc(environment, next));
+        }
+
+        public void Delete(
+            string urlPattern,
+            MiddlewareFunc middlewareFunc,
+            HandlerWithParamsFunc handlerFunc)
+        {
+            Delete(urlPattern, new []{ middlewareFunc }, handlerFunc);
+        }
+
+        public void Delete(
+            string urlPattern,
+            MiddlewareFunc[] middlewareFuncs,
+            HandlerFunc handlerFunc)
+        {
+            Delete(urlPattern, middlewareFuncs, (environment, @params, next) => handlerFunc(environment, next));
+        }
+
+        public void Delete(
+            string urlPattern,
+            MiddlewareFunc[] middlewareFuncs,
+            HandlerWithParamsFunc handlerFunc)
         {
             AddHandler(
                 "DELETE",
-                new Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>(
+                new DispatcherHandler(
                     CreateRegexForUrlPattern(urlPattern),
-                    handler));
+                    middlewareFuncs,
+                    handlerFunc));
         }
 
         void EnsureHandlersHaveMethodKey(string method)
@@ -80,105 +97,245 @@ namespace qed
             var key = method.ToLowerInvariant();
 
             if (!_handlers.ContainsKey(key))
-                _handlers.Add(key, new List<Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>>());
+                _handlers.Add(key, new List<DispatcherHandler>());
         }
 
-        Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> FindHandler(string method, string path)
+        public virtual DispatcherHandler FindHandler(
+            string method, 
+            string path,
+            out dynamic @params)
         {
             var key = method.ToLowerInvariant();
 
             EnsureHandlersHaveMethodKey(key);
 
-            var @params = new ExpandoObject() as IDictionary<string, object>;
+            var paramsDictionary = new ExpandoObject() as IDictionary<string, object>; ;
 
             Match matches = null;
 
             var matchingHandler = _handlers[key]
                 .FirstOrDefault(x =>
                 {
-                    matches = x.Item1.Match(path);
+                    matches = x.UrlPatternRegex.Match(path);
                     return matches.Success;
                 });
 
             if (matchingHandler == null)
+            {
+                @params = paramsDictionary;
                 return null;
+            }
 
-            foreach (var groupName in matchingHandler.Item1.GetGroupNames())
-                @params.Add(groupName, matches.Groups[groupName].Value);
+            foreach (var groupName in matchingHandler.UrlPatternRegex.GetGroupNames())
+                paramsDictionary.Add(groupName, matches.Groups[groupName].Value);
 
-            return (environement, next) => matchingHandler.Item2(environement, @params, next);
+            @params = paramsDictionary;
+
+            return matchingHandler;
         }
 
         public void Get(
             string urlPattern,
-            Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handlerFunc)
         {
-            Get(urlPattern, (environment, @params, next) => handler(environment, next));
+            Get(urlPattern, new MiddlewareFunc[0], (environment, @params, next) => handlerFunc(environment, next));
         }
 
         public void Get(
             string urlPattern,
-            Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerWithParamsFunc handlerFunc)
+        {
+            Get(urlPattern, new MiddlewareFunc[0], handlerFunc);
+        }
+
+        public void Get(
+            string urlPattern,
+            MiddlewareFunc middlewareFunc,
+            HandlerFunc handlerFunc)
+        {
+            Get(urlPattern, new []{ middlewareFunc }, (environment, @params, next) => handlerFunc(environment, next));
+        }
+
+        public void Get(
+            string urlPattern,
+            MiddlewareFunc middlewareFunc,
+            HandlerWithParamsFunc handlerFunc)
+        {
+            Get(urlPattern, new[] { middlewareFunc }, handlerFunc);
+        }
+
+        public void Get(
+            string urlPattern,
+            MiddlewareFunc[] middlewareFuncs,
+            HandlerFunc handlerFunc)
+        {
+            Get(urlPattern, middlewareFuncs, (environment, @params, next) => handlerFunc(environment, next));
+        }
+
+        public void Get(
+            string urlPattern,
+            MiddlewareFunc[] middlewareFuncs,
+            HandlerWithParamsFunc handlerFunc)
         {
             AddHandler(
                 "GET",
-                new Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>(
+                new DispatcherHandler(
                     CreateRegexForUrlPattern(urlPattern),
-                    handler));
+                    middlewareFuncs,
+                    handlerFunc));
         }
 
         public void Patch(
             string urlPattern,
-            Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handlerFunc)
         {
-            Patch(urlPattern, (environment, @params, next) => handler(environment, next));
+            Patch(urlPattern, new MiddlewareFunc[0], (environment, @params, next) => handlerFunc(environment, next));
         }
 
         public void Patch(
             string urlPattern,
-            Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerWithParamsFunc handlerFunc)
+        {
+            Patch(urlPattern, new MiddlewareFunc[0], handlerFunc);
+        }
+
+        public void Patch(
+            string urlPattern,
+            MiddlewareFunc middlewareFunc,
+            HandlerFunc handlerFunc)
+        {
+            Patch(urlPattern, new[] { middlewareFunc }, (environment, @params, next) => handlerFunc(environment, next));
+        }
+
+        public void Patch(
+            string urlPattern,
+            MiddlewareFunc middlewareFunc,
+            HandlerWithParamsFunc handlerFunc)
+        {
+            Patch(urlPattern, new[] { middlewareFunc }, handlerFunc);
+        }
+        
+        public void Patch(
+            string urlPattern,
+            MiddlewareFunc[] middlewareFuncs,
+            HandlerFunc handlerFunc)
+        {
+            Patch(urlPattern, middlewareFuncs, (environment, @params, next) => handlerFunc(environment, next));
+        }
+
+        public void Patch(
+            string urlPattern,
+            MiddlewareFunc[] middlewareFuncs,
+            HandlerWithParamsFunc handlerFunc)
         {
             AddHandler(
                 "PATCH",
-                new Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>(
+                new DispatcherHandler(
                     CreateRegexForUrlPattern(urlPattern),
-                    handler));
+                    middlewareFuncs,
+                    handlerFunc));
         }
 
         public void Post(
             string urlPattern,
-            Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handlerFunc)
         {
-            Post(urlPattern, (environment, @params, next) => handler(environment, next));
+            Post(urlPattern, new MiddlewareFunc[0], (environment, @params, next) => handlerFunc(environment, next));
         }
 
         public void Post(
             string urlPattern,
-            Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerWithParamsFunc handlerFunc)
+        {
+            Post(urlPattern, new MiddlewareFunc[0], handlerFunc);
+        }
+
+        public void Post(
+            string urlPattern,
+            MiddlewareFunc middlewareFunc,
+            HandlerFunc handlerFunc)
+        {
+            Post(urlPattern, new[] { middlewareFunc }, (environment, @params, next) => handlerFunc(environment, next));
+        }
+
+        public void Post(
+            string urlPattern,
+            MiddlewareFunc middlewareFunc,
+            HandlerWithParamsFunc handlerFunc)
+        {
+            Post(urlPattern, new[] { middlewareFunc }, handlerFunc);
+        }
+
+        public void Post(
+            string urlPattern,
+            MiddlewareFunc[] middlewareFuncs,
+            HandlerFunc handlerFunc)
+        {
+            Post(urlPattern, middlewareFuncs, (environment, @params, next) => handlerFunc(environment, next));
+        }
+
+        public void Post(
+            string urlPattern,
+            MiddlewareFunc[] middlewareFuncs,
+            HandlerWithParamsFunc handlerFunc)
         {
             AddHandler(
                 "POST",
-                new Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>(
+                new DispatcherHandler(
                     CreateRegexForUrlPattern(urlPattern),
-                    handler));
+                    middlewareFuncs,
+                    handlerFunc));
         }
 
         public void Put(
             string urlPattern,
-            Func<IDictionary<string, object>, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerFunc handlerFunc)
         {
-            Put(urlPattern, (environment, @params, next) => handler(environment, next));
+            Put(urlPattern, new MiddlewareFunc[0], (environment, @params, next) => handlerFunc(environment, next));
         }
 
         public void Put(
             string urlPattern,
-            Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task> handler)
+            HandlerWithParamsFunc handlerFunc)
+        {
+            Put(urlPattern, new MiddlewareFunc[0], handlerFunc);
+        }
+
+        public void Put(
+            string urlPattern,
+            MiddlewareFunc middlewareFunc,
+            HandlerFunc handler)
+        {
+            Put(urlPattern, new[] { middlewareFunc }, (environment, @params, next) => handler(environment, next));
+        }
+
+        public void Put(
+            string urlPattern,
+            MiddlewareFunc middlewareFunc,
+            HandlerWithParamsFunc handlerFunc)
+        {
+            Put(urlPattern, new[] { middlewareFunc }, handlerFunc);
+        }
+        
+        public void Put(
+            string urlPattern,
+            MiddlewareFunc[] middlewareFuncs,
+            HandlerFunc handlerFunc)
+        {
+            Put(urlPattern, middlewareFuncs, (environment, @params, next) => handlerFunc(environment, next));
+        }
+
+        public void Put(
+            string urlPattern,
+            MiddlewareFunc[] middlewareFuncs,
+            HandlerWithParamsFunc handlerFunc)
         {
             AddHandler(
                 "PUT",
-                new Tuple<Regex, Func<IDictionary<string, object>, dynamic, Func<IDictionary<string, object>, Task>, Task>>(
+                new DispatcherHandler(
                     CreateRegexForUrlPattern(urlPattern),
-                    handler));
+                    middlewareFuncs,
+                    handlerFunc));
         }
     }
 }

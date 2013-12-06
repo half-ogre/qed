@@ -1,5 +1,6 @@
 ﻿  <h1><a href="/">Home</a> &raquo; <a href="/{{owner}}/{{name}}">{{owner}}/{{name}}</a> &raquo; Build #{{id}}</h1>
   <h2 class="build-{{status}}">{{description}}</h2>
+  {{#isAdministrator}}
   {{#failed}}
   <form action="/events/force" method="POST">
     <input name="payload" type="hidden" value='{ "ref": "{{ref}}", "repository": { "owner": { "name": "{{owner}}" }, "name": "{{name}}" } }' />
@@ -12,4 +13,5 @@
   </form>
   {{/revision}}
   {{/failed}}
+  {{/isAdministrator}}
   <pre>{{output}}</pre>

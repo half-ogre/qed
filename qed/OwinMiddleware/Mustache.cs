@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Nustache.Core;
@@ -14,6 +15,7 @@ namespace qed
     {
         class MustacheConfiguration
         {
+            public Func<IDictionary<string, object>, object> LayoutDataFunc { get; set; }
             public string LayoutTemplateName { get; set; }
             public string TemplateFileExtension { get; set; }
             public string TemplateRootPath { get; set; }
@@ -24,7 +26,8 @@ namespace qed
         public static MiddlewareFunc Create(
             string templateRootDirectoryName = null,
             string templateFileExtension = null,
-            string layoutTemplateName = null)
+            string layoutTemplateName = null,
+            Func<IDictionary<string, object>, object> layoutDataFunc = null)
         {
             templateRootDirectoryName = templateRootDirectoryName ?? "templates";
             templateFileExtension = templateFileExtension ?? ".mustache";
@@ -36,7 +39,8 @@ namespace qed
             {
                 TemplateRootPath = templateRootPath,
                 TemplateFileExtension = templateFileExtension,
-                LayoutTemplateName = layoutTemplateName
+                LayoutTemplateName = layoutTemplateName,
+                LayoutDataFunc = layoutDataFunc
             };
 
             return next => environment =>
@@ -45,6 +49,22 @@ namespace qed
 
                 return next(environment);
             };
+        }
+
+        private static object GetLayoutData(
+            MustacheConfiguration configuration,
+            IDictionary<string, object> environment,
+            object data)
+        {
+            if (configuration.LayoutDataFunc == null)
+                return data;
+
+            var templateData = data.ToDictionary();
+            var layoutData = configuration.LayoutDataFunc(environment).ToDictionary();
+
+            return new[] { templateData, layoutData }
+                .SelectMany(x => x)
+                .ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
         static Template GetTemplate(
@@ -94,7 +114,8 @@ namespace qed
             if (HasLayout(configuration) && !templateName.Equals(configuration.LayoutTemplateName))
             {
                 var layout = GetTemplate(configuration, configuration.LayoutTemplateName);
-                return RenderTemplate(configuration, responseBody, layout, data, hasLayout: true,  bodyTemplateName: templateName);
+                var layoutData = GetLayoutData(configuration, environment, data);
+                return RenderTemplate(configuration, responseBody, layout, layoutData, hasLayout: true,  bodyTemplateName: templateName);
             }
 
             var template = GetTemplate(configuration, templateName);
