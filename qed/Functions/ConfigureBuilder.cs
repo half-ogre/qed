@@ -30,6 +30,8 @@ namespace qed
 
             builder.Use(ContentType.Create());
 
+            builder.Use(MethodOverrideMiddleware.Create());
+
             builder.UseCookieAuthentication(new CookieAuthenticationOptions
             {
                 AuthenticationMode = AuthenticationMode.Active,

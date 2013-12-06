@@ -145,6 +145,7 @@
     <Compile Include="Functions\SetGitHubBuildStatus.cs" />
     <Compile Include="Functions\SetConfiguration.cs" />
     <Compile Include="OwinMiddleware\ContentType.cs" />
+    <Compile Include="OwinMiddleware\MethodOverrideMiddleware.cs" />
     <Compile Include="OwinMiddleware\Dispatcher.cs" />
     <Compile Include="OwinMiddleware\DispatcherHandler.cs" />
     <Compile Include="OwinMiddleware\IDispatcher.cs" />
