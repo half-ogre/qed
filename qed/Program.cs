@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Owin.Builder;
@@ -13,6 +14,34 @@ namespace qed
 
     class Program
     {
+        static void EnsureAdmiministrator()
+        {
+            if (!fn.GetAdministrators().Any())
+            {
+                Console.WriteLine("There are no administrator users.");
+                Console.WriteLine("You must create an administrator user to start QED.");
+                Console.WriteLine("");
+                Console.WriteLine("Enter a username for your new administrator user:");
+                var username = Console.ReadLine();
+                if (String.IsNullOrEmpty(username) || !Constants.UsernameRegex.IsMatch(username))
+                {
+                    Console.WriteLine("Invalid username (must have just letters and numbers). Exiting.");
+                    Environment.Exit(1);
+                }
+                Console.WriteLine("Enter a password for your new administrator user:");
+                var password = Console.ReadLine();
+                if (String.IsNullOrEmpty(password) || password.Length < 8)
+                {
+                    Console.WriteLine("Invalid password (must be at least 8 characters). Exiting.");
+                    Environment.Exit(1);
+                }
+
+                fn.CreateUser(username, password, null);
+
+                Console.WriteLine("Created admnistrator.");
+            }
+        }
+
         static void ShowHelp(OptionSet options)
         {
             Console.WriteLine("Usage: qed.exe [options]");
@@ -51,6 +80,8 @@ namespace qed
             }
 
             fn.SetConfiguration(Constants.Configuration.HostKey, hostArg);
+
+            EnsureAdmiministrator();
 
             var appBuilder = new AppBuilder();
 

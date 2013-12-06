@@ -1,7 +1,11 @@
-﻿namespace qed
+﻿using System.Text.RegularExpressions;
+
+namespace qed
 {
     public static class Constants
     {
+        public static readonly Regex UsernameRegex = new Regex("^[a-z][a-z0-9_-]+[a-z0-9]$", RegexOptions.IgnoreCase);
+
         public static class Configuration
         {
             public const string BaseDirectoryKey = "BaseDirectory";
