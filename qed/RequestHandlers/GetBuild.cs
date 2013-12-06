@@ -42,7 +42,8 @@ namespace qed
                 sha,
                 failed = !build.Succeeded,
                 output = fn.Redact(build.Ouput),
-                status = GetBuildStatus(build)
+                status = GetBuildStatus(build),
+                user = environment.GetUser().To(user => new { username = user.Username })
             });
         }
     }

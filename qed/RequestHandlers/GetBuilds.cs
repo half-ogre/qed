@@ -28,7 +28,8 @@ namespace qed
             {
                 owner = buildConfiguration.Owner,
                 name = buildConfiguration.Name,
-                builds = CreateBuildsResponseModel(buildConfiguration)
+                builds = CreateBuildsResponseModel(buildConfiguration),
+                user = environment.GetUser().To(user => new { username = user.Username })
             };
 
             return environment.Render(
