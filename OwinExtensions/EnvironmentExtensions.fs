@@ -152,4 +152,4 @@ type EnvironmentExt() =
 
     [<Extension>]
     static member SetStatusCode (environment:Environment, statusCode:int) = 
-        environment.[ResponseStatusCodeKey] <- statusCode
+        EnvironmentExt.Set(environment, ResponseStatusCodeKey, statusCode)
