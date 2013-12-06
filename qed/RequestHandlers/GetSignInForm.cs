@@ -11,7 +11,7 @@ namespace qed
             IDictionary<string, object> environment,
             Func<IDictionary<string, object>, Task> next)
         {
-            return environment.Render("sign-in-form", new { user = environment.GetUser().To(user => new { username = user.Username }) });
+            return environment.Render("sign-in-form", null);
         }
     }
 }

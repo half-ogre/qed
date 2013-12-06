@@ -42,8 +42,7 @@ namespace qed
 
             return environment.Render("home", new
             {
-                configuredRepos,
-                user = environment.GetUser().To(user => new { username = user.Username })
+                configuredRepos
             });
         }
     }

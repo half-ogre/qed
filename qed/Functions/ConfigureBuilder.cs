@@ -67,7 +67,13 @@ namespace qed
 
             builder.Use(Mustache.Create(
                 templateRootDirectoryName: "MustacheTemplates",
-                layoutTemplateName: "_layout"));
+                layoutTemplateName: "_layout",
+                layoutDataFunc: environment =>
+                    environment.GetUser().To(user => new
+                    {
+                        isAdministrator = user.IsAdministrator,
+                        user = new {username = user.Username}
+                    })));
 
             builder.Use(DispatcherMiddleware.Create(dispatcher =>
             {
