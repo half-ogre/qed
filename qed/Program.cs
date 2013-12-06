@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Owin.Builder;
+using Mono.Options;
 using Nowin;
 using fn = qed.Functions;
 
@@ -12,8 +13,45 @@ namespace qed
 
     class Program
     {
-        static void Main()
+        static void ShowHelp(OptionSet options)
         {
+            Console.WriteLine("Usage: qed.exe [options]");
+            Console.WriteLine();
+            Console.WriteLine("Options:");
+            options.WriteOptionDescriptions(Console.Out);
+        }
+
+        static void Main(string[] args)
+        {
+            string hostArg = null;
+            var showHelp = false;
+
+            var options = new OptionSet
+            {
+                {"host=", v => hostArg = v},
+                {"h|?|help", v => showHelp = v != null}
+            };
+
+            try
+            {
+                options.Parse(args);
+            }
+            catch (OptionException optionEx)
+            {
+                Console.Write("qed: ");
+                Console.WriteLine(optionEx.Message);
+                Console.WriteLine("Try `qed.exe --help' for more information.");
+                return;
+            }
+
+            if (showHelp)
+            {
+                ShowHelp(options);
+                return;
+            }
+
+            fn.SetConfiguration(Constants.Configuration.HostKey, hostArg);
+
             var appBuilder = new AppBuilder();
 
             OwinServerFactory.Initialize(appBuilder.Properties);
