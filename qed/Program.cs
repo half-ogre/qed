@@ -87,6 +87,7 @@ namespace qed
                 {
                     // TODO: Do this with cancellation and timeout
                     fn.BuildNext(Console.WriteLine);
+                    fn.FailTimedOutBuilds(Console.WriteLine);
                 }
                 catch (AggregateException agEx)
                 {

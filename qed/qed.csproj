@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Functions\CompareToPasswordHash.cs" />
+    <Compile Include="Functions\FailTimedOutBuilds.cs" />
     <Compile Include="Functions\ToDictionary.cs" />
     <Compile Include="Functions\GeneratePasswordHash.cs" />
     <Compile Include="Functions\GetRepositoryUrl.cs" />
@@ -171,6 +172,7 @@
     <Compile Include="RavenDocuments\User.cs" />
     <Compile Include="RavenDocuments\Build.cs" />
     <Compile Include="BuildConfiguration.cs" />
+    <Compile Include="RavenQueries\GetTimedOutBuilds.cs" />
     <Compile Include="RavenQueries\GetUsers.cs" />
     <Compile Include="RavenQueries\GetUserByUsername.cs" />
     <Compile Include="RavenQueries\GetUsersCount.cs" />
