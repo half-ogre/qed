@@ -227,6 +227,9 @@
     <Content Include="MustacheTemplates\sign-in-form.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="MustacheTemplates\users.mustache">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <Content Include="MustacheTemplates\home.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
