@@ -1,0 +1,16 @@
+﻿  <h1><a href="/">Home</a> &raquo; Sign In</h1>
+  <form action="/session" method="POST">
+    <div class="form-group">
+      <ul class="errors">
+        {{#errors}}
+        <li>{{error}}</li>
+        {{/errors}}
+      </ul>
+      <input type="hidden" name="_method" value="PUT" />
+      <label for="username">Username (just letters and numbers, please):</label>
+      <input name="username" type="text" value="{{username}}" />
+      <label for="password">Password (the longer the better):</label>
+      <input name="password" type="password" />
+      <button type="submit">Sign In</button>
+    </div>
+  </form>

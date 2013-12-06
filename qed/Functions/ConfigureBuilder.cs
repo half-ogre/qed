@@ -51,6 +51,7 @@ namespace qed
                 dispatcher.Post("/events/push", Handlers.PostPushEvent);
                 dispatcher.Post("/events/force", Handlers.PostForceEvent);
                 dispatcher.Get("/forms/sign-up", forbidIfSignedIn, Handlers.GetSignUpForm);
+                dispatcher.Get("/forms/sign-in", forbidIfSignedIn, Handlers.GetSignInForm);
                 dispatcher.Post("/users", forbidIfSignedIn, Handlers.PostUsers);
                 dispatcher.Get("/{owner}/{name}", Handlers.GetBuilds);
                 dispatcher.Get("/{owner}/{name}/builds/{id}", Handlers.GetBuild);

@@ -173,6 +173,7 @@
     <Compile Include="RavenQueries\GetLastFinishedBuild.cs" />
     <Compile Include="RavenQueries\GetBuilds.cs" />
     <Compile Include="RavenQueries\GetBuild.cs" />
+    <Compile Include="RequestHandlers\GetSignInForm.cs" />
     <Compile Include="RequestHandlers\GetSignUpForm.cs" />
     <Compile Include="RequestHandlers\PostUsers.cs" />
     <Compile Include="RequestHandlers\PostBuild.cs" />
@@ -214,6 +215,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MustacheTemplates\sign-up-form.mustache">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MustacheTemplates\sign-in-form.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
