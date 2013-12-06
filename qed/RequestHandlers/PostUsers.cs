@@ -14,8 +14,6 @@ namespace qed
             IDictionary<string, object> environment,
             Func<IDictionary<string, object>, Task> next)
         {
-            var usernameRegex = new Regex("^[a-z][a-z0-9_-]+[a-z0-9]$", RegexOptions.IgnoreCase);
-            
             var form = environment.ReadForm();
 
             var username = form["username"].FirstOrDefault();
@@ -28,7 +26,7 @@ namespace qed
                 errors.Add("Username is required.");
             else
             {
-                if (!usernameRegex.IsMatch(username))
+                if (!Constants.UsernameRegex.IsMatch(username))
                     errors.Add("Username is invalid; must match regular expression '^[a-z][a-z0-9_-]+[a-z0-9]$'.");
 
                 var exustingUser = fn.GetUserByUsername(username);
