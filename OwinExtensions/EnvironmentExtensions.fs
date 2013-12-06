@@ -63,16 +63,16 @@ type EnvironmentExt() =
             | _ -> completedTask
 
     [<Extension>]
-    static member GetMethod (environment) =
-        EnvironmentExt.Get<string> (environment, RequestMethodKey)
-
-    [<Extension>]
     static member GetPath (environment) =
         EnvironmentExt.Get<string> (environment, RequestPathKey)
 
     [<Extension>]
     static member GetRequestBody (environment) =
         EnvironmentExt.Get<Stream> (environment, RequestBodyKey)
+
+    [<Extension>]
+    static member GetRequestMethod (environment) =
+        EnvironmentExt.Get<string> (environment, RequestMethodKey)
 
     [<Extension>]
     static member GetRequestHeaders (environment) = 

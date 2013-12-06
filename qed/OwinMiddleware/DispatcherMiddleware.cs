@@ -20,7 +20,7 @@ namespace qed
 
             return next => environment =>
             {
-                var method = environment.GetMethod();
+                var method = environment.GetRequestMethod();
                 var path = environment.GetPath();
 
                 dynamic @params;
