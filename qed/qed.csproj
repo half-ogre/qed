@@ -170,6 +170,7 @@
     <Compile Include="RavenDocuments\User.cs" />
     <Compile Include="RavenDocuments\Build.cs" />
     <Compile Include="BuildConfiguration.cs" />
+    <Compile Include="RavenQueries\GetUsers.cs" />
     <Compile Include="RavenQueries\GetUserByUsername.cs" />
     <Compile Include="RavenQueries\GetUsersCount.cs" />
     <Compile Include="RavenQueries\GetNextBuild.cs" />
