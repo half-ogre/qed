@@ -17,6 +17,7 @@ namespace qed
             var appBuilder = new AppBuilder();
 
             OwinServerFactory.Initialize(appBuilder.Properties);
+            appBuilder.Properties.Add("host.AppName", "QED" );
 
             fn.ConfigureBuilder(appBuilder);
             

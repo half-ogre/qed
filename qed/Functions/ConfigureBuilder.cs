@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Security.Principal;
 using System.Threading.Tasks;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
+using Microsoft.Owin.Security.Cookies;
 using Owin;
 using OwinExtensions;
 
@@ -27,6 +29,15 @@ namespace qed
             });
 
             builder.Use(ContentType.Create());
+
+            builder.UseCookieAuthentication(new CookieAuthenticationOptions
+            {
+                AuthenticationMode = AuthenticationMode.Active,
+                AuthenticationType = "Session",
+                CookieName = "Fnord",
+                LoginPath = new PathString("/forms/sign-in"),
+                LogoutPath = new PathString("/forms/sign-out")
+            });
 
             builder.Use(Mustache.Create(
                 templateRootDirectoryName: "MustacheTemplates",
