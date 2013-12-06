@@ -16,6 +16,18 @@ namespace qed
     {
         public static void ConfigureBuilder(IAppBuilder builder)
         {
+            var forbidIfNotSignedIn = new MiddlewareFunc(next => env =>
+            {
+                var principal = env.Get<IPrincipal>("server.User");
+                if (principal == null || !principal.Identity.IsAuthenticated)
+                {
+                    env.SetStatusCode(403);
+                    return env.GetCompleted();
+                }
+
+                return next(env);
+            });
+
             var forbidIfSignedIn = new MiddlewareFunc(next => env =>
             {
                 var principal = env.Get<IPrincipal>("server.User");
@@ -54,6 +66,7 @@ namespace qed
                 dispatcher.Get("/forms/sign-in", forbidIfSignedIn, Handlers.GetSignInForm);
                 dispatcher.Put("/session", forbidIfSignedIn, Handlers.PutSession);
                 dispatcher.Post("/users", forbidIfSignedIn, Handlers.PostUsers);
+                dispatcher.Delete("/session", forbidIfNotSignedIn, Handlers.DeleteSession);
                 dispatcher.Get("/{owner}/{name}", Handlers.GetBuilds);
                 dispatcher.Get("/{owner}/{name}/builds/{id}", Handlers.GetBuild);
                 dispatcher.Post("/{owner}/{name}/builds", Handlers.PostBuild);
