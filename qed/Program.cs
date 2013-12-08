@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Owin.Builder;
@@ -18,19 +20,21 @@ namespace qed
         {
             if (fn.GetAdministrators().Any())
                 return;
-           
+
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("There are no administrator users.");
+            Console.ResetColor();
             Console.WriteLine("You must create an administrator user to start QED.");
-            Console.WriteLine("");
-            Console.WriteLine("Enter a username for your new administrator user:");
+            Console.Write("Enter a username: ");
             var username = Console.ReadLine();
             if (String.IsNullOrEmpty(username) || !Constants.UsernameRegex.IsMatch(username))
             {
                 Console.WriteLine("Invalid username (must have just letters and numbers). Exiting.");
                 Environment.Exit(1);
             }
-            Console.WriteLine("Enter a password for your new administrator user:");
-            var password = Console.ReadLine();
+            Console.Write("Enter a password: ");
+            var password = ReadPassword();
             if (String.IsNullOrEmpty(password) || password.Length < 8)
             {
                 Console.WriteLine("Invalid password (must be at least 8 characters). Exiting.");
@@ -91,6 +95,34 @@ namespace qed
             }
 
             fn.SetConfiguration(Constants.Configuration.HostKey, hostArg);
+        }
+
+        static string ReadPassword()
+        {
+            var password = new StringBuilder();
+            ConsoleKeyInfo key;
+
+            do
+            {
+                key = Console.ReadKey(true);
+
+                if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
+                {
+                    password.Append(key.KeyChar);
+                    Console.Write("*");
+                }
+                else
+                {
+                    if (key.Key == ConsoleKey.Backspace && password.Length > 0)
+                    {
+                        password.Length--;
+                        Console.Write("\b \b");
+                    }
+                }
+            }
+            while (key.Key != ConsoleKey.Enter);
+
+            return password.ToString();
         }
 
         static void RunBuilds()
