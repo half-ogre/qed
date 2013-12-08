@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Owin.Builder;
@@ -16,30 +18,32 @@ namespace qed
     {
         static void EnsureAdmiministrator()
         {
-            if (!fn.GetAdministrators().Any())
+            if (fn.GetAdministrators().Any())
+                return;
+
+            Console.BackgroundColor = ConsoleColor.Red;
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("There are no administrator users.");
+            Console.ResetColor();
+            Console.WriteLine("You must create an administrator user to start QED.");
+            Console.Write("Enter a username: ");
+            var username = Console.ReadLine();
+            if (String.IsNullOrEmpty(username) || !Constants.UsernameRegex.IsMatch(username))
             {
-                Console.WriteLine("There are no administrator users.");
-                Console.WriteLine("You must create an administrator user to start QED.");
-                Console.WriteLine("");
-                Console.WriteLine("Enter a username for your new administrator user:");
-                var username = Console.ReadLine();
-                if (String.IsNullOrEmpty(username) || !Constants.UsernameRegex.IsMatch(username))
-                {
-                    Console.WriteLine("Invalid username (must have just letters and numbers). Exiting.");
-                    Environment.Exit(1);
-                }
-                Console.WriteLine("Enter a password for your new administrator user:");
-                var password = Console.ReadLine();
-                if (String.IsNullOrEmpty(password) || password.Length < 8)
-                {
-                    Console.WriteLine("Invalid password (must be at least 8 characters). Exiting.");
-                    Environment.Exit(1);
-                }
-
-                fn.CreateUser(username, password, null);
-
-                Console.WriteLine("Created admnistrator.");
+                Console.WriteLine("Invalid username (must have just letters and numbers). Exiting.");
+                Environment.Exit(1);
             }
+            Console.Write("Enter a password: ");
+            var password = ReadPassword();
+            if (String.IsNullOrEmpty(password) || password.Length < 8)
+            {
+                Console.WriteLine("Invalid password (must be at least 8 characters). Exiting.");
+                Environment.Exit(1);
+            }
+
+            fn.CreateUser(username, password, null);
+
+            Console.WriteLine("Created administrator.");
         }
 
         static void ShowHelp(OptionSet options)
@@ -51,6 +55,17 @@ namespace qed
         }
 
         static void Main(string[] args)
+        {
+            ReadOptions(args);
+
+            EnsureAdmiministrator();
+
+            StartWebServer();
+
+            RunBuilds();
+        }
+
+        static void ReadOptions(string[] args)
         {
             string hostArg = null;
             var showHelp = false;
@@ -70,41 +85,48 @@ namespace qed
                 Console.Write("qed: ");
                 Console.WriteLine(optionEx.Message);
                 Console.WriteLine("Try `qed.exe --help' for more information.");
-                return;
+                Environment.Exit(1);
             }
 
             if (showHelp)
             {
                 ShowHelp(options);
-                return;
+                Environment.Exit(1);
             }
 
             fn.SetConfiguration(Constants.Configuration.HostKey, hostArg);
+        }
 
-            EnsureAdmiministrator();
+        static string ReadPassword()
+        {
+            var password = new StringBuilder();
+            ConsoleKeyInfo key;
 
-            var appBuilder = new AppBuilder();
+            do
+            {
+                key = Console.ReadKey(true);
 
-            OwinServerFactory.Initialize(appBuilder.Properties);
-            appBuilder.Properties.Add("host.AppName", "QED" );
+                if (key.Key != ConsoleKey.Backspace && key.Key != ConsoleKey.Enter)
+                {
+                    password.Append(key.KeyChar);
+                    Console.Write("*");
+                }
+                else
+                {
+                    if (key.Key == ConsoleKey.Backspace && password.Length > 0)
+                    {
+                        password.Length--;
+                        Console.Write("\b \b");
+                    }
+                }
+            }
+            while (key.Key != ConsoleKey.Enter);
 
-            fn.ConfigureBuilder(appBuilder);
-            
-            var serverBuilder = ServerBuilder
-                .New()
-                .SetPort(1754)
-                .SetOwinApp(appBuilder.Build())
-                .SetOwinCapabilities((IDictionary<string, object>)appBuilder.Properties[OwinKeys.ServerCapabilitiesKey]);
+            return password.ToString();
+        }
 
-            var server = serverBuilder.Start();
-
-            Console.CancelKeyPress += (sender, eventArgs) => server.Dispose();
-                
-            Console.WriteLine("Started qed.");
-            Console.WriteLine("Listening on port 1754.");
-            Console.WriteLine("Press CTRL+C to exit.");
-            Console.WriteLine();
-
+        static void RunBuilds()
+        {
             // TODO: Decide on a better loggin approach
             var fail = new Action<Exception>(ex =>
             {
@@ -135,6 +157,32 @@ namespace qed
                     Thread.Sleep(250);
                 }
             }
+        }
+
+        static void StartWebServer()
+        {
+            var appBuilder = new AppBuilder();
+
+            OwinServerFactory.Initialize(appBuilder.Properties);
+
+            appBuilder.Properties.Add("host.AppName", "QED");
+
+            fn.ConfigureBuilder(appBuilder);
+
+            var serverBuilder = ServerBuilder
+                .New()
+                .SetPort(1754)
+                .SetOwinApp(appBuilder.Build())
+                .SetOwinCapabilities((IDictionary<string, object>)appBuilder.Properties[OwinKeys.ServerCapabilitiesKey]);
+
+            var server = serverBuilder.Start();
+
+            Console.CancelKeyPress += (sender, eventArgs) => server.Dispose();
+
+            Console.WriteLine("Started qed.");
+            Console.WriteLine("Listening on port 1754.");
+            Console.WriteLine("Press CTRL+C to exit.");
+            Console.WriteLine();
         }
     }
 }
