@@ -52,6 +52,17 @@ namespace qed
 
         static void Main(string[] args)
         {
+            ReadOptions(args);
+
+            EnsureAdmiministrator();
+
+            StartWebServer();
+
+            RunBuilds();
+        }
+
+        static void ReadOptions(string[] args)
+        {
             string hostArg = null;
             var showHelp = false;
 
@@ -70,41 +81,20 @@ namespace qed
                 Console.Write("qed: ");
                 Console.WriteLine(optionEx.Message);
                 Console.WriteLine("Try `qed.exe --help' for more information.");
-                return;
+                Environment.Exit(1);
             }
 
             if (showHelp)
             {
                 ShowHelp(options);
-                return;
+                Environment.Exit(1);
             }
 
             fn.SetConfiguration(Constants.Configuration.HostKey, hostArg);
+        }
 
-            EnsureAdmiministrator();
-
-            var appBuilder = new AppBuilder();
-
-            OwinServerFactory.Initialize(appBuilder.Properties);
-            appBuilder.Properties.Add("host.AppName", "QED" );
-
-            fn.ConfigureBuilder(appBuilder);
-            
-            var serverBuilder = ServerBuilder
-                .New()
-                .SetPort(1754)
-                .SetOwinApp(appBuilder.Build())
-                .SetOwinCapabilities((IDictionary<string, object>)appBuilder.Properties[OwinKeys.ServerCapabilitiesKey]);
-
-            var server = serverBuilder.Start();
-
-            Console.CancelKeyPress += (sender, eventArgs) => server.Dispose();
-                
-            Console.WriteLine("Started qed.");
-            Console.WriteLine("Listening on port 1754.");
-            Console.WriteLine("Press CTRL+C to exit.");
-            Console.WriteLine();
-
+        static void RunBuilds()
+        {
             // TODO: Decide on a better loggin approach
             var fail = new Action<Exception>(ex =>
             {
@@ -135,6 +125,32 @@ namespace qed
                     Thread.Sleep(250);
                 }
             }
+        }
+
+        static void StartWebServer()
+        {
+            var appBuilder = new AppBuilder();
+
+            OwinServerFactory.Initialize(appBuilder.Properties);
+
+            appBuilder.Properties.Add("host.AppName", "QED");
+
+            fn.ConfigureBuilder(appBuilder);
+
+            var serverBuilder = ServerBuilder
+                .New()
+                .SetPort(1754)
+                .SetOwinApp(appBuilder.Build())
+                .SetOwinCapabilities((IDictionary<string, object>)appBuilder.Properties[OwinKeys.ServerCapabilitiesKey]);
+
+            var server = serverBuilder.Start();
+
+            Console.CancelKeyPress += (sender, eventArgs) => server.Dispose();
+
+            Console.WriteLine("Started qed.");
+            Console.WriteLine("Listening on port 1754.");
+            Console.WriteLine("Press CTRL+C to exit.");
+            Console.WriteLine();
         }
     }
 }
