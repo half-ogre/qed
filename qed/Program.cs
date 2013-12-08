@@ -16,30 +16,30 @@ namespace qed
     {
         static void EnsureAdmiministrator()
         {
-            if (!fn.GetAdministrators().Any())
+            if (fn.GetAdministrators().Any())
+                return;
+           
+            Console.WriteLine("There are no administrator users.");
+            Console.WriteLine("You must create an administrator user to start QED.");
+            Console.WriteLine("");
+            Console.WriteLine("Enter a username for your new administrator user:");
+            var username = Console.ReadLine();
+            if (String.IsNullOrEmpty(username) || !Constants.UsernameRegex.IsMatch(username))
             {
-                Console.WriteLine("There are no administrator users.");
-                Console.WriteLine("You must create an administrator user to start QED.");
-                Console.WriteLine("");
-                Console.WriteLine("Enter a username for your new administrator user:");
-                var username = Console.ReadLine();
-                if (String.IsNullOrEmpty(username) || !Constants.UsernameRegex.IsMatch(username))
-                {
-                    Console.WriteLine("Invalid username (must have just letters and numbers). Exiting.");
-                    Environment.Exit(1);
-                }
-                Console.WriteLine("Enter a password for your new administrator user:");
-                var password = Console.ReadLine();
-                if (String.IsNullOrEmpty(password) || password.Length < 8)
-                {
-                    Console.WriteLine("Invalid password (must be at least 8 characters). Exiting.");
-                    Environment.Exit(1);
-                }
-
-                fn.CreateUser(username, password, null);
-
-                Console.WriteLine("Created admnistrator.");
+                Console.WriteLine("Invalid username (must have just letters and numbers). Exiting.");
+                Environment.Exit(1);
             }
+            Console.WriteLine("Enter a password for your new administrator user:");
+            var password = Console.ReadLine();
+            if (String.IsNullOrEmpty(password) || password.Length < 8)
+            {
+                Console.WriteLine("Invalid password (must be at least 8 characters). Exiting.");
+                Environment.Exit(1);
+            }
+
+            fn.CreateUser(username, password, null);
+
+            Console.WriteLine("Created admnistrator.");
         }
 
         static void ShowHelp(OptionSet options)
