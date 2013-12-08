@@ -39,7 +39,7 @@ namespace qed
 
             fn.CreateUser(username, password, null);
 
-            Console.WriteLine("Created admnistrator.");
+            Console.WriteLine("Created administrator.");
         }
 
         static void ShowHelp(OptionSet options)
