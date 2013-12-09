@@ -113,6 +113,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Functions\CompareToPasswordHash.cs" />
+    <Compile Include="Functions\GetGitHubBuildStatusDescription.cs" />
     <Compile Include="Functions\FailTimedOutBuilds.cs" />
     <Compile Include="Functions\ToDictionary.cs" />
     <Compile Include="Functions\GeneratePasswordHash.cs" />

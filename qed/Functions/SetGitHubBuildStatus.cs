@@ -13,7 +13,7 @@ namespace qed
                 build,
                 state,
                 GetBuildConfiguration,
-                GetBuildDescription,
+                GetGitHubBuildStatusDescription,
                 GetHost,
                 (token, owner, name, sha, commitState, targetUrl, description) =>
                 {
