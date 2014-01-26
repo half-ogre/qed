@@ -21,6 +21,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "OwinExtensions", "OwinExten
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "qed.AspNet", "qed-aspnet\qed.AspNet.fsproj", "{C598698E-BD3F-4543-AA94-EA8002D4090B}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "qed.Owin", "qed-owin\qed.Owin.fsproj", "{281AE808-BD7A-4025-B617-C65AD3F89560}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C598698E-BD3F-4543-AA94-EA8002D4090B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C598698E-BD3F-4543-AA94-EA8002D4090B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C598698E-BD3F-4543-AA94-EA8002D4090B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{281AE808-BD7A-4025-B617-C65AD3F89560}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{281AE808-BD7A-4025-B617-C65AD3F89560}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{281AE808-BD7A-4025-B617-C65AD3F89560}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{281AE808-BD7A-4025-B617-C65AD3F89560}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
