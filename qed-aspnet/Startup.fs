@@ -6,7 +6,9 @@ open Owin
 
 type OwinConfigurator() = 
     member x.Configuration (appBuilder: IAppBuilder) =
-        configureQed appBuilder
+        appBuilder 
+        |> useQed
+        |> ignore
 
 module Startup =
     [<assembly: OwinStartup(typeof<OwinConfigurator>)>]
