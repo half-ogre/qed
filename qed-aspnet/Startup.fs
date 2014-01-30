@@ -4,12 +4,13 @@ open Configuration
 open Microsoft.Owin
 open Owin
 
-type OwinConfigurator() = 
+type Startup() = 
     member x.Configuration (appBuilder: IAppBuilder) =
         appBuilder 
         |> useQed
         |> ignore
 
+[<CompilationRepresentation(CompilationRepresentationFlags.ModuleSuffix)>]
 module Startup =
-    [<assembly: OwinStartup(typeof<OwinConfigurator>)>]
+    [<assembly: OwinStartup(typeof<Startup>)>]
     do()
