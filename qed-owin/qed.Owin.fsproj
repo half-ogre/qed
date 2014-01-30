@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Owin.fs" />
     <Compile Include="OwinEnvironment.fs" />
+    <Compile Include="DispatcherMiddleware.fs" />
     <Compile Include="Configuration.fs" />
     <None Include="packages.config" />
   </ItemGroup>
@@ -86,6 +87,13 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OwinExtensions\OwinExtensions.fsproj">
+      <Name>OwinExtensions</Name>
+      <Project>{c69ed03f-b94d-43e7-baf1-7237ced853e0}</Project>
+      <Private>True</Private>
+    </ProjectReference>
   </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
