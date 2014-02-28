@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.Owin.Builder;
 using Mono.Options;
 using Nowin;
+using Raven.Storage.Managed;
 using fn = qed.Functions;
 
 namespace qed
@@ -134,29 +135,29 @@ namespace qed
                 Console.WriteLine(String.Concat("\t", ex));
             });
 
-            var autoResetEvent = new AutoResetEvent(false);
-
             while (true)
             {
-                try
+                var build = new Task(() =>
                 {
-                    // TODO: Do this with cancellation and timeout
-                    fn.BuildNext(Console.WriteLine);
-                    fn.FailTimedOutBuilds(Console.WriteLine);
-                }
-                catch (AggregateException agEx)
-                {
-                    // TODO: Do I need to worry about InnerExceptions?
-                    fail(agEx.InnerException);
-                }
-                catch (Exception ex)
-                {
-                    fail(ex);
-                }
-                finally
-                {
-                    autoResetEvent.WaitOne(250);
-                }
+                    try
+                    {
+                        // TODO: Do this with cancellation and timeout
+                        fn.BuildNext(Console.WriteLine);
+                        fn.FailTimedOutBuilds(Console.WriteLine);
+                    }
+                    catch (AggregateException agEx)
+                    {
+                        // TODO: Do I need to worry about InnerExceptions?
+                        fail(agEx.InnerException);
+                    }
+                    catch (Exception ex)
+                    {
+                        fail(ex);
+                    }
+                });
+
+                build.RunSynchronously();
+                Task.WaitAll(build, Task.Delay(5000));
             }
         }
 
