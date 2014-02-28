@@ -157,7 +157,7 @@ namespace qed
                 });
 
                 build.RunSynchronously();
-                Task.WaitAll(build, Task.Delay(5000));
+                Task.WaitAll(build, Task.Delay(250));
             }
         }
 
