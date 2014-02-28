@@ -134,10 +134,10 @@ namespace qed
                 Console.WriteLine(String.Concat("\t", ex));
             });
 
+            var autoResetEvent = new AutoResetEvent(false);
+
             while (true)
             {
-                var eve = new AutoResetEvent(false);
-
                 try
                 {
                     // TODO: Do this with cancellation and timeout
@@ -155,7 +155,7 @@ namespace qed
                 }
                 finally
                 {
-                    eve.WaitOne(250);
+                    autoResetEvent.WaitOne(250);
                 }
             }
         }
