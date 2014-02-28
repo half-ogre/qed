@@ -136,6 +136,8 @@ namespace qed
 
             while (true)
             {
+                var eve = new AutoResetEvent(false);
+
                 try
                 {
                     // TODO: Do this with cancellation and timeout
@@ -153,8 +155,7 @@ namespace qed
                 }
                 finally
                 {
-                    // TODO: Surely there is a better way to idle?
-                    Thread.Sleep(250);
+                    eve.WaitOne(250);
                 }
             }
         }
