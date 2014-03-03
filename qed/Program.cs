@@ -5,6 +5,7 @@ using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using LibGit2Sharp;
 using Microsoft.Owin.Builder;
 using Mono.Options;
 using Nowin;
@@ -70,9 +71,14 @@ namespace qed
             string hostArg = null;
             var showHelp = false;
 
+            SetDefaultConfig();
+
             var options = new OptionSet
             {
                 {"host=", v => hostArg = v},
+                {"ravendbconnectionstring=", "Connection string for RavenDb if you don't want to use the local, embedded version", r => fn.SetConfiguration(Constants.Configuration.RavenConnectionStringKey, r)},
+                {"ravendbdatadirectory=", "Path for the local, embedded RavenDb data directory", r => fn.SetConfiguration(Constants.Configuration.RavenDataDirectoryKey, r)},
+                {"repositoriespath=", "Path for the local GitHub repositories", r => fn.SetConfiguration(Constants.Configuration.RepositoriesPathKey, r)},
                 {"h|?|help", v => showHelp = v != null}
             };
 
@@ -157,6 +163,14 @@ namespace qed
                     Thread.Sleep(250);
                 }
             }
+        }
+
+        static void SetDefaultConfig()
+        {
+            fn.SetConfiguration(Constants.Configuration.PortKey, 1754);
+            fn.SetConfiguration(Constants.Configuration.RavenConnectionStringKey, string.Empty);
+            fn.SetConfiguration(Constants.Configuration.RavenDataDirectoryKey, "~\\.ravendb");
+            fn.SetConfiguration(Constants.Configuration.RepositoriesPathKey, ".repositories");
         }
 
         static void StartWebServer()

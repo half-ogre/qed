@@ -1,5 +1,6 @@
 ﻿using Raven.Client;
 using Raven.Client.Embedded;
+using fn = qed.Functions;
 
 namespace qed
 {
@@ -13,7 +14,7 @@ namespace qed
 
             ravenStore = new EmbeddableDocumentStore
             {
-                DataDirectory = "~\\.ravendb"
+                DataDirectory = GetConfiguration<string>(Constants.Configuration.RavenDataDirectoryKey)
             };
             
             ravenStore.Initialize();
