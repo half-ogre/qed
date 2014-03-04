@@ -76,6 +76,7 @@ namespace qed
             var options = new OptionSet
             {
                 {"host=", v => hostArg = v},
+                {"port=", "Port the webserver listens on", p => fn.SetConfiguration(Constants.Configuration.PortKey, p)},
                 {"ravendbconnectionstring=", "Connection string for RavenDb if you don't want to use the local, embedded version", r => fn.SetConfiguration(Constants.Configuration.RavenConnectionStringKey, r)},
                 {"ravendbdatadirectory=", "Path for the local, embedded RavenDb data directory", r => fn.SetConfiguration(Constants.Configuration.RavenDataDirectoryKey, r)},
                 {"repositoriespath=", "Path for the local GitHub repositories", r => fn.SetConfiguration(Constants.Configuration.RepositoriesPathKey, r)},
