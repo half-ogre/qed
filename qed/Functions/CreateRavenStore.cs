@@ -1,7 +1,6 @@
 ﻿using Raven.Client;
 using Raven.Client.Document;
 using Raven.Client.Embedded;
-using fn = qed.Functions;
 
 namespace qed
 {
