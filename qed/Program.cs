@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
@@ -55,6 +56,21 @@ namespace qed
             options.WriteOptionDescriptions(Console.Out);
         }
 
+        static string GetBuildConfigurationPath()
+        {
+            var baseDirectory = fn.GetBaseDirectory();
+            var buildConfigurationsPath = Path.Combine(baseDirectory, "build.config");
+
+            if (File.Exists(buildConfigurationsPath)) 
+                return buildConfigurationsPath;
+
+            var rootBuildConfigurationsPath = Path.Combine(baseDirectory, @"..\..\..\", "Build.config");
+
+            buildConfigurationsPath = File.Exists(rootBuildConfigurationsPath) ? rootBuildConfigurationsPath : "";
+
+            return buildConfigurationsPath;
+        }
+
         static void Main(string[] args)
         {
             ReadOptions(args);
@@ -68,14 +84,14 @@ namespace qed
 
         static void ReadOptions(string[] args)
         {
-            string hostArg = null;
             var showHelp = false;
 
             SetDefaultConfig();
 
             var options = new OptionSet
             {
-                {"host=", v => hostArg = v},
+                {"buildconfig=", "Path for the Build config file", b => fn.SetConfiguration(Constants.Configuration.BuildConfigurationsKey, b)},
+                {"host=", h => fn.SetConfiguration(Constants.Configuration.HostKey, h)},
                 {"port=", "Port the webserver listens on", p => fn.SetConfiguration(Constants.Configuration.PortKey, p)},
                 {"ravendbconnectionstring=", "Connection string for RavenDb if you don't want to use the local, embedded version", r => fn.SetConfiguration(Constants.Configuration.RavenConnectionStringKey, r)},
                 {"ravendbdatadirectory=", "Path for the local, embedded RavenDb data directory", r => fn.SetConfiguration(Constants.Configuration.RavenDataDirectoryKey, r)},
@@ -100,8 +116,6 @@ namespace qed
                 ShowHelp(options);
                 Environment.Exit(1);
             }
-
-            fn.SetConfiguration(Constants.Configuration.HostKey, hostArg);
         }
 
         static string ReadPassword()
@@ -168,8 +182,10 @@ namespace qed
 
         static void SetDefaultConfig()
         {
+            fn.SetConfiguration(Constants.Configuration.BuildConfigurationLocationKey, GetBuildConfigurationPath());
+            fn.SetConfiguration(Constants.Configuration.HostKey, null);
             fn.SetConfiguration(Constants.Configuration.PortKey, 1754);
-            fn.SetConfiguration(Constants.Configuration.RavenConnectionStringKey, string.Empty);
+            fn.SetConfiguration(Constants.Configuration.RavenConnectionStringKey, null);
             fn.SetConfiguration(Constants.Configuration.RavenDataDirectoryKey, "~\\.ravendb");
             fn.SetConfiguration(Constants.Configuration.RepositoriesPathKey, ".repositories");
         }

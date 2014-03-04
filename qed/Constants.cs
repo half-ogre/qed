@@ -10,6 +10,7 @@ namespace qed
         {
             public const string BaseDirectoryKey = "BaseDirectory";
             public const string BuildConfigurationsKey = "BuildConfigurations";
+            public const string BuildConfigurationLocationKey = "BuildConfigurationLocation";
             public const string HostKey = "Host";
             public const string PortKey = "Port";
             public const string RavenConnectionStringKey = "RavenConnectionString";
