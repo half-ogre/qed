@@ -1,4 +1,5 @@
 ﻿using Raven.Client;
+using Raven.Client.Document;
 using Raven.Client.Embedded;
 using fn = qed.Functions;
 
@@ -12,10 +13,16 @@ namespace qed
             if (ravenStore != null)
                 return ravenStore;
 
-            ravenStore = new EmbeddableDocumentStore
-            {
-                DataDirectory = GetConfiguration<string>(Constants.Configuration.RavenDataDirectoryKey)
-            };
+            if (string.IsNullOrEmpty(GetConfiguration<string>(Constants.Configuration.RavenConnectionStringKey)))
+                ravenStore = new EmbeddableDocumentStore
+                {
+                    DataDirectory = GetConfiguration<string>(Constants.Configuration.RavenDataDirectoryKey)
+                };
+            else
+                ravenStore = new DocumentStore
+                {
+                    Url = GetConfiguration<string>(Constants.Configuration.RavenConnectionStringKey)
+                };
             
             ravenStore.Initialize();
 
