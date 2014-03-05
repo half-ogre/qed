@@ -92,7 +92,7 @@ namespace qed
             {
                 {"buildconfig=", "Path for the Build config file", b => fn.SetConfiguration(Constants.Configuration.BuildConfigurationsKey, b)},
                 {"host=", h => fn.SetConfiguration(Constants.Configuration.HostKey, h)},
-                {"port=", "Port the webserver listens on", p => fn.SetConfiguration(Constants.Configuration.PortKey, p)},
+                {"port=", "Port the webserver listens on", p => fn.SetConfiguration(Constants.Configuration.PortKey, int.Parse(p))},
                 {"ravenconnectionstring=", "Connection string for RavenDb if you don't want to use the local, embedded version", r => fn.SetConfiguration(Constants.Configuration.RavenConnectionStringKey, r)},
                 {"ravendatadirectory=", "Path for the local, embedded RavenDb data directory", r => fn.SetConfiguration(Constants.Configuration.RavenDataDirectoryKey, r)},
                 {"repositoriespath=", "Path for the local GitHub repositories", r => fn.SetConfiguration(Constants.Configuration.RepositoriesPathKey, r)},
@@ -202,7 +202,7 @@ namespace qed
 
             var serverBuilder = ServerBuilder
                 .New()
-                .SetPort(1754)
+                .SetPort(fn.GetConfiguration<int>(Constants.Configuration.PortKey))
                 .SetOwinApp(appBuilder.Build())
                 .SetOwinCapabilities((IDictionary<string, object>)appBuilder.Properties[OwinKeys.ServerCapabilitiesKey]);
 
@@ -211,7 +211,7 @@ namespace qed
             Console.CancelKeyPress += (sender, eventArgs) => server.Dispose();
 
             Console.WriteLine("Started qed.");
-            Console.WriteLine("Listening on port 1754.");
+            Console.WriteLine("Listening on port {0}.", fn.GetConfiguration<int>(Constants.Configuration.PortKey));
             Console.WriteLine("Press CTRL+C to exit.");
             Console.WriteLine();
         }
