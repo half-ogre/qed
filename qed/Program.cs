@@ -90,7 +90,7 @@ namespace qed
 
             var options = new OptionSet
             {
-                {"buildconfig=", "Path for the Build config file", b => fn.SetConfiguration(Constants.Configuration.BuildConfigurationsKey, b)},
+                {"buildconfig=", "Path for the Build config file", b => fn.SetConfiguration(Constants.Configuration.BuildConfigurationLocationKey, b)},
                 {"host=", h => fn.SetConfiguration(Constants.Configuration.HostKey, h)},
                 {"port=", "Port the webserver listens on", p => fn.SetConfiguration(Constants.Configuration.PortKey, int.Parse(p))},
                 {"ravenconnectionstring=", "Connection string for RavenDb if you don't want to use the local, embedded version", r => fn.SetConfiguration(Constants.Configuration.RavenConnectionStringKey, r)},
