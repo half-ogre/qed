@@ -10,8 +10,13 @@ namespace qed
         {
             public const string BaseDirectoryKey = "BaseDirectory";
             public const string BuildConfigurationsKey = "BuildConfigurations";
+            public const string BuildConfigurationLocationKey = "BuildConfigurationLocation";
             public const string HostKey = "Host";
+            public const string PortKey = "Port";
+            public const string RavenConnectionStringKey = "RavenConnectionString";
+            public const string RavenDataDirectoryKey = "RavenDataDirectory";
             public const string RavenStoreKey = "RavenStore";
+            public const string RepositoriesPathKey = "RepositoriesPath";
         }
     }
 }

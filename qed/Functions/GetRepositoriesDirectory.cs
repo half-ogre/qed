@@ -1,4 +1,5 @@
 ﻿using System.IO;
+using fn = qed.Functions;
 
 namespace qed
 {
@@ -6,7 +7,7 @@ namespace qed
     {
         public static string GetRepositoriesDirectory()
         {
-            var repositoriesDirectory = Path.Combine(GetBaseDirectory(), ".repositories");
+            var repositoriesDirectory = Path.Combine(GetBaseDirectory(), GetConfiguration<string>(Constants.Configuration.RepositoriesPathKey));
             EnsureDirectoryExists(repositoriesDirectory);
             return repositoriesDirectory;
         }
