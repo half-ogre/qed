@@ -13,15 +13,19 @@ namespace qed
                 return ravenStore;
 
             if (string.IsNullOrEmpty(GetConfiguration<string>(Constants.Configuration.RavenConnectionStringKey)))
+            {
                 ravenStore = new EmbeddableDocumentStore
                 {
                     DataDirectory = GetConfiguration<string>(Constants.Configuration.RavenDataDirectoryKey)
                 };
+            }
             else
+            { 
                 ravenStore = new DocumentStore
                 {
                     Url = GetConfiguration<string>(Constants.Configuration.RavenConnectionStringKey)
                 };
+            }
             
             ravenStore.Initialize();
 
