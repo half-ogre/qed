@@ -23,6 +23,7 @@ namespace qed
             { 
                 ravenStore = new DocumentStore
                 {
+                    DefaultDatabase = "qed",
                     Url = GetConfiguration<string>(Constants.Configuration.RavenConnectionStringKey)
                 };
             }
