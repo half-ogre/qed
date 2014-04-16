@@ -10,7 +10,7 @@ namespace qed
             Process process, 
             Action<string> log)
         {
-            const int timeout = 5 /* minutes */ * 60 /* seconds */ * 1000 /* milliseconds */;
+            const int timeout = 10 /* minutes */ * 60 /* seconds */ * 1000 /* milliseconds */;
             
             var stopwatch = new Stopwatch();
             stopwatch.Start();
