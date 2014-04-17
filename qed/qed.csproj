@@ -183,6 +183,7 @@
     <Compile Include="RavenQueries\GetLastFinishedBuild.cs" />
     <Compile Include="RavenQueries\GetBuilds.cs" />
     <Compile Include="RavenQueries\GetBuild.cs" />
+    <Compile Include="RequestHandlers\Get404.cs" />
     <Compile Include="RequestHandlers\PatchUser.cs" />
     <Compile Include="RequestHandlers\GetUsers.cs" />
     <Compile Include="RequestHandlers\DeleteSession.cs" />
@@ -235,6 +236,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="MustacheTemplates\users.mustache">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="MustacheTemplates\404.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="packages.config" />
