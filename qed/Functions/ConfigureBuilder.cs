@@ -58,6 +58,7 @@ namespace qed
                 if (user == null || !user.IsAdministrator)
                 {
                     env.SetStatusCode(401);
+
                     return env.GetCompleted();
                 }
 
@@ -102,6 +103,7 @@ namespace qed
                 dispatcher.Get("/{owner}/{name}", Handlers.GetBuilds);
                 dispatcher.Get("/{owner}/{name}/builds/{id}", Handlers.GetBuild);
                 dispatcher.Post("/{owner}/{name}/builds", forbidIfNotAdministrator, Handlers.PostBuild);
+                dispatcher.Get("/.*", Handlers.Get404);
             }));
         }
     }

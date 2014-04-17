@@ -148,7 +148,7 @@ namespace qed
 
         static void RunBuilds()
         {
-            // TODO: Decide on a better loggin approach
+            // TODO: Decide on a better login approach
             var fail = new Action<Exception>(ex =>
             {
                 Console.WriteLine("BuildNext failed with: ");
