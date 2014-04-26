@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Nustache.Core;
@@ -67,18 +68,9 @@ namespace qed
                 .ToDictionary(pair => pair.Key, pair => pair.Value);
         }
 
-        static Template GetTemplate(
-            MustacheConfiguration configuration, 
-            string templateName)
+        static Template GetTemplate(string templateName)
         {
-            var templatePath = Path.Combine(
-                configuration.TemplateRootPath,
-                String.Concat(templateName, configuration.TemplateFileExtension));
-
-            if (!File.Exists(templatePath))
-                throw new InvalidOperationException("Template path does not exist.");
-
-            var templateSource = File.ReadAllText(templatePath);
+            var templateSource = ReadEmbeddedTemplate(templateName);
 
             var template = new Template();
             template.Load(new StringReader(templateSource));
@@ -87,10 +79,32 @@ namespace qed
 
         static bool HasLayout(MustacheConfiguration configuration)
         {
-            return File.Exists(
-                Path.Combine(
-                    configuration.TemplateRootPath,
-                    String.Concat(configuration.LayoutTemplateName, configuration.TemplateFileExtension)));
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = MakeEmbeddedTemplateResourceName(configuration.LayoutTemplateName);
+
+            return assembly.GetManifestResourceNames().Contains(resourceName);
+        }
+
+        static string MakeEmbeddedTemplateResourceName(string templateName)
+        {
+            return String.Concat("qed.MustacheTemplates.", templateName, ".mustache");
+        }
+
+        static string ReadEmbeddedTemplate(string templateName)
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+            var resourceName = MakeEmbeddedTemplateResourceName(templateName);
+
+            using (var stream = assembly.GetManifestResourceStream(resourceName))
+            {
+                if (stream == null)
+                    throw new InvalidOperationException(String.Format("No embedded template resource named {0} exists.", templateName));
+
+                using (var reader = new StreamReader(stream))
+                {
+                    return reader.ReadToEnd();
+                }
+            }
         }
 
         public static Task Render(
@@ -113,17 +127,16 @@ namespace qed
 
             if (HasLayout(configuration) && !templateName.Equals(configuration.LayoutTemplateName))
             {
-                var layout = GetTemplate(configuration, configuration.LayoutTemplateName);
+                var layout = GetTemplate(configuration.LayoutTemplateName);
                 var layoutData = GetLayoutData(configuration, environment, data);
-                return RenderTemplate(configuration, responseBody, layout, layoutData, hasLayout: true,  bodyTemplateName: templateName);
+                return RenderTemplate(responseBody, layout, layoutData, hasLayout: true,  bodyTemplateName: templateName);
             }
 
-            var template = GetTemplate(configuration, templateName);
-            return RenderTemplate(configuration, responseBody, template, data, hasLayout: false);
+            var template = GetTemplate(templateName);
+            return RenderTemplate(responseBody, template, data, hasLayout: false);
         }
 
         static Task RenderTemplate(
-            MustacheConfiguration configuration,
             Stream responseStream,
             Template template, 
             object data,
@@ -140,9 +153,9 @@ namespace qed
                         name =>
                         {
                             if (hasLayout && name.Equals("body", StringComparison.OrdinalIgnoreCase))
-                                return GetTemplate(configuration, bodyTemplateName);
+                                return GetTemplate(bodyTemplateName);
 
-                            return GetTemplate(configuration, name);
+                            return GetTemplate(name);
                         });
                 }
             });
