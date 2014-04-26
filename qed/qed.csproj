@@ -216,31 +216,31 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <Content Include="MustacheTemplates\builds.mustache">
+    <EmbeddedResource Include="MustacheTemplates\builds.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="MustacheTemplates\_layout.mustache">
+    </EmbeddedResource>
+    <EmbeddedResource Include="MustacheTemplates\_layout.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="MustacheTemplates\build.mustache">
+    </EmbeddedResource>
+    <EmbeddedResource Include="MustacheTemplates\build.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="MustacheTemplates\queued.mustache">
+    </EmbeddedResource>
+    <EmbeddedResource Include="MustacheTemplates\queued.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="MustacheTemplates\sign-up-form.mustache">
+    </EmbeddedResource>
+    <EmbeddedResource Include="MustacheTemplates\sign-up-form.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="MustacheTemplates\sign-in-form.mustache">
+    </EmbeddedResource>
+    <EmbeddedResource Include="MustacheTemplates\sign-in-form.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="MustacheTemplates\users.mustache">
+    </EmbeddedResource>
+    <EmbeddedResource Include="MustacheTemplates\users.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
     <None Include="packages.config" />
-    <Content Include="MustacheTemplates\home.mustache">
+    <EmbeddedResource Include="MustacheTemplates\home.mustache">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OwinExtensions\OwinExtensions.fsproj">
