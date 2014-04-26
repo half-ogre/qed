@@ -91,7 +91,7 @@ type EnvironmentExt() =
         let form = EnvironmentExt.Get<Form>(environment, RequestFormKey)
 
         let createForm() =
-            let stream = EnvironmentExt.GetResponseBody(environment)
+            let stream = EnvironmentExt.GetRequestBody(environment)
             use streamReader = new StreamReader(stream)
             let formText = streamReader.ReadToEnd()
             let form = helpers.parseForm(formText)
