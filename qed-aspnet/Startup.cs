@@ -10,7 +10,7 @@ namespace qed
     {
         public void Configuration(IAppBuilder app)
         {
-            Functions.ConfigureBuilder(app);
+            app.UseQed();
         }
     }
 }
