@@ -1,5 +1,4 @@
-﻿using System.Net.Http.Headers;
-using Octokit;
+﻿using Octokit;
 
 namespace qed
 {
